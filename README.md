@@ -1,2 +1,1 @@
 # MrBeast2
- 
