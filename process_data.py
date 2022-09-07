@@ -2,13 +2,16 @@ import json
 import os
 import pprint
 
+def load_categories(path):
+    with open(path) as v_c:
+        v_c_file = json.load(v_c)
+        return {item["id"]:item["snippet"]["title"] for item in v_c_file["items"]}
+
 if __name__ == '__main__':
     directory = "./data/"
     pp = pprint.PrettyPrinter(indent = 4)
 
-    with open("./resources/video_categories.json", "r") as v_c:
-        v_c_file = json.load(v_c)
-        video_categories = {item["id"]:item["snippet"]["title"] for item in v_c_file["items"]}
+    video_categories = load_categories("./resources/video_categories.json")
 
     for file in os.listdir(directory):
         with open(directory + file, "r") as f:
