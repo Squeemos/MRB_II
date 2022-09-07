@@ -46,16 +46,19 @@ def main():
     youtube = googleapiclient.discovery.build(
         api_service_name, api_version, developerKey = api_key)
 
+    # List of valid commands
     commands = {
     0 : "Get top 50 videos",
     1 : "Get video categories",
     }
 
+    # Get what to do
     print("What would you like to do")
     for key, value in commands.items():
         print(f"{key:2}: {value}")
     type = int(input())
 
+    # Get top 50 videos
     if type == 0:
         request = youtube.videos().list(
             part="snippet,contentDetails,statistics",
@@ -69,6 +72,7 @@ def main():
         with open(f"./data/{todays_date}_output.json", "w") as outfile:
             json.dump(response, outfile, indent = 4)
 
+    # Get video categories
     elif type == 1:
         request = youtube.videoCategories().list(
             part="snippet",
@@ -77,6 +81,9 @@ def main():
         response = request.execute()
         with open(f"./resources/video_categories.json", "w") as outfile:
             json.dump(response, outfile, indent = 4)
+
+    else:
+        print(f"Error: Command \"{type}\" not specified, please try a valid command")
 
 if __name__ == "__main__":
     main()
