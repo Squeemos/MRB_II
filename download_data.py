@@ -5,6 +5,7 @@
 # https://developers.google.com/explorer-help/code-samples#python
 
 import os
+from sys import platform
 from datetime import date
 
 import google_auth_oauthlib.flow
@@ -14,11 +15,27 @@ import googleapiclient.errors
 import json
 import glob
 
-scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
-secret_key_dir = "./secret_keys/*.json"
-api_key_dir = "./secret_keys/*.txt"
-
 def main():
+    scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
+
+    if platform == "win32":
+        secret_key_dir = "./secret_keys/*.json"
+        api_key_dir = "./secret_keys/*.txt"
+        data_path = f"./data/"
+        resources_path = f"./resources/"
+
+    elif platform == "darwin":
+        local_path = __file__.rsplit('/',1)[0]
+        secret_key_dir = local_path + "/secret_keys/*.json"
+        api_key_dir = local_path + "/secret_keys/*.txt"
+        data_path = local_path + "/data/"
+        resources_path = local_path + "/resources/"
+
+    else:
+        print("Operating system not handled...")
+        exit()
+
+
     # Disable OAuthlib's HTTPS verification when running locally.
     # *DO NOT* leave this option enabled in production.
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
@@ -69,7 +86,7 @@ def main():
         )
         response = request.execute()
         todays_date = date.today().strftime("%Y_%m_%d")
-        with open(f"./data/{todays_date}_output.json", "w") as outfile:
+        with open(data_path + f"{todays_date}_output.json", "w") as outfile:
             json.dump(response, outfile, indent = 4)
 
     # Get video categories
@@ -79,7 +96,7 @@ def main():
             regionCode="US"
         )
         response = request.execute()
-        with open(f"./resources/video_categories.json", "w") as outfile:
+        with open(resources_path + f"video_categories.json", "w") as outfile:
             json.dump(response, outfile, indent = 4)
 
     else:
