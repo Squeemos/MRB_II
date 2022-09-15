@@ -5,6 +5,8 @@ secret_keys/*.json
 secret_keys/*.txt
 secret_keys/*.key
 
+.DS_Store
+
 # Executables
 
 # Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
