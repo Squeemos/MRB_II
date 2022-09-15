@@ -3,6 +3,7 @@
 # Other files and folders
 secret_keys/*.json
 secret_keys/*.txt
+secret_keys/*.key
 
 # Executables
 
