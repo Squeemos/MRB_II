@@ -33,7 +33,7 @@ def main():
         api_service_name, api_version, developerKey = api_key)
 
     request = youtube.videos().list(
-        part="snippet,contentDetails,statistics",
+        part="id,snippet,contentDetails,status,statistics,player,topicDetails,recordingDetails,liveStreamingDetails,localizations",
         chart="mostPopular",
         maxResults=50,
         regionCode="US",
