@@ -1,0 +1,39 @@
+Challenges:
+
+* Nested JSON data
+* Variable length array-like features
+* Most features are subject to change
+* What to keep (ie how many thumbnail links)
+
+Array-Like Features:
+
+* Converting to string and storing in one column is anti-pattern
+	* Potentially slower and more cumbersome than semi-structured db solution
+* The SQL solution is to create 1-many table for each variable length feature
+	* ex. Separate 'Tags' table where each tag in each video at each time = 1 entry
+	* ex. Tags, region restriction, thumbnail links, etc.
+	* More db normalization will require more joins
+	* Mutability of features like tags presents a problem
+		* Settling on keeping only original tags would not reflect updates
+		* Inserting all tags with date would be a lot of data
+			* Could keep date feature and insert only new tags with date
+				* Wouldn't reflect deleted tags. Keep DateDeleted feature?
+
+NoSQL:
+
+* Would be way simpler from an implementation standpoint
+	* See prototype using TinyDB in db_prototype.ipynb
+* Would result in lots more data repetition
+	* As discussed though, repeated data would often be theoretically mutable
+	* Could use multiple tables
+		* Would have to use custom python-based joins
+* TinyDB extensions?
+	* Compression
+	* Caching
+	* Faster serialization
+	* Even an experimental adapter for MongoDB
+
+API 'Search':
+
+* Supports only snippet!
+* Need to find a way to get all the info from searches, even if indirectly.
