@@ -21,7 +21,7 @@ def main():
     local_path = Path(__file__).parent.resolve()
     secret_key_dir = str(local_path / "./secret_keys/*.json")
     api_key_dir = str(local_path / "./secret_keys/*.txt")
-    data_path = str(local_path / "./data/")
+    data_path = str(local_path / "./data/") + "/"
     resources_path = str(local_path / "./resources/")
 
     # Disable OAuthlib's HTTPS verification when running locally.
