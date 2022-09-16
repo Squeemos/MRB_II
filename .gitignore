@@ -15,3 +15,5 @@ secret_keys/*.key
 
 # 
 .ipynb_checkpoints/
+.idea/
+__pycache__/
