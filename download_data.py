@@ -5,8 +5,8 @@
 # https://developers.google.com/explorer-help/code-samples#python
 
 import os
-from sys import platform
 from datetime import date
+from pathlib import Path
 
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
@@ -18,23 +18,11 @@ import glob
 def main():
     scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
-    if platform == "win32":
-        secret_key_dir = "./secret_keys/*.json"
-        api_key_dir = "./secret_keys/*.txt"
-        data_path = f"./data/"
-        resources_path = f"./resources/"
-
-    elif platform == "darwin":
-        local_path = __file__.rsplit('/',1)[0]
-        secret_key_dir = local_path + "/secret_keys/*.json"
-        api_key_dir = local_path + "/secret_keys/*.txt"
-        data_path = local_path + "/data/"
-        resources_path = local_path + "/resources/"
-
-    else:
-        print("Operating system not handled...")
-        exit()
-
+    local_path = Path(__file__).parent.resolve()
+    secret_key_dir = str(local_path / "./secret_keys/*.json")
+    api_key_dir = str(local_path / "./secret_keys/*.txt")
+    data_path = str(local_path / "./data/") + "/"
+    resources_path = str(local_path / "./resources/")
 
     # Disable OAuthlib's HTTPS verification when running locally.
     # *DO NOT* leave this option enabled in production.
@@ -73,10 +61,10 @@ def main():
     print("What would you like to do")
     for key, value in commands.items():
         print(f"{key:2}: {value}")
-    type = int(input())
+    what = int(input())
 
     # Get top 50 videos
-    if type == 0:
+    if what == 0:
         request = youtube.videos().list(
             part="snippet,contentDetails,statistics",
             chart="mostPopular",
@@ -90,7 +78,7 @@ def main():
             json.dump(response, outfile, indent = 4)
 
     # Get video categories
-    elif type == 1:
+    elif what == 1:
         request = youtube.videoCategories().list(
             part="snippet",
             regionCode="US"
@@ -100,7 +88,7 @@ def main():
             json.dump(response, outfile, indent = 4)
 
     else:
-        print(f"Error: Command \"{type}\" not specified, please try a valid command")
+        print(f"Error: Command \"{what}\" not specified, please try a valid command")
 
 if __name__ == "__main__":
     main()
