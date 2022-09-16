@@ -31,7 +31,9 @@ def main():
     pprint(vid)
 
     dt = datetime.strptime(vid["publishedAt"], "%Y-%m-%dT%H:%M:%SZ")
-    print(dt)
+
+    with open("example_entry.json", "w") as outfile:
+        json.dump(vid, outfile, indent=4)
 
 
 def pprint(data):
