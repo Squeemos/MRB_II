@@ -1,0 +1,93 @@
+{
+    "time": "2022-09-16T01:53:52Z",
+    "timestamp": 1663293232.239408,
+    "kind": "youtube#video",
+    "etag": "TcTLb84_RaYhrXQF06vpsS07kQs",
+    "id": "UJ9Iz7HhU-I",
+    "publishedAt": "2022-09-13T14:52:36Z",
+    "channelId": "UCGIY_O-8vW4rfX98KlMkvRg",
+    "title": "Nintendo Direct 9.13.2022",
+    "description": "Tune in for a Nintendo Direct livestream featuring roughly 40 minutes of information mostly focused on Nintendo Switch games launching this winter.\n\nVisit the official site: https://www.nintendo.com/nintendo-direct/09-13-2022/\n\nSubscribe for more Nintendo fun! https://goo.gl/HYYsot\r\n\r\nVisit Nintendo.com for all the latest! http://www.nintendo.com/\r\n\r\nLike Nintendo on Facebook: http://www.facebook.com/Nintendo\r\nFollow us on Twitter: http://twitter.com/NintendoAmerica\r\nFollow us on Instagram: http://instagram.com/Nintendo\r\nFollow us on Pinterest: http://pinterest.com/Nintendo",
+    "thumbnails": {
+        "default": {
+            "url": "https://i.ytimg.com/vi/UJ9Iz7HhU-I/default.jpg",
+            "width": 120,
+            "height": 90
+        },
+        "medium": {
+            "url": "https://i.ytimg.com/vi/UJ9Iz7HhU-I/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+        },
+        "high": {
+            "url": "https://i.ytimg.com/vi/UJ9Iz7HhU-I/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+        }
+    },
+    "channelTitle": "Nintendo",
+    "tags": [
+        "adventure",
+        "fun",
+        "game",
+        "gameplay",
+        "nintendo",
+        "Nintendo Direct",
+        "Nintendo Direct 9.13.2022",
+        "nintendo direct",
+        "nintendo direct september 13 2022",
+        "nintendo direct 9/13/2022",
+        "nintendo direct 9/13/22",
+        "zelda",
+        "new zelda",
+        "legend of zelda",
+        "breath of the wild",
+        "breath of the wild 2",
+        "breath of the wild sequel",
+        "The Legend of Zelda Tears of the Kingdom",
+        "zelda tears of the kingdom",
+        "tears of the kingdom",
+        "pikmin 4",
+        "pikmin",
+        "pikmin switch",
+        "fire emblem",
+        "fire emblem switch",
+        "splatoon 3",
+        "splatoon 3 splatfest"
+    ],
+    "categoryId": 20,
+    "liveBroadcastContent": "none",
+    "localized": {
+        "title": "Nintendo Direct 9.13.2022",
+        "description": "Tune in for a Nintendo Direct livestream featuring roughly 40 minutes of information mostly focused on Nintendo Switch games launching this winter.\n\nVisit the official site: https://www.nintendo.com/nintendo-direct/09-13-2022/\n\nSubscribe for more Nintendo fun! https://goo.gl/HYYsot\r\n\r\nVisit Nintendo.com for all the latest! http://www.nintendo.com/\r\n\r\nLike Nintendo on Facebook: http://www.facebook.com/Nintendo\r\nFollow us on Twitter: http://twitter.com/NintendoAmerica\r\nFollow us on Instagram: http://instagram.com/Nintendo\r\nFollow us on Pinterest: http://pinterest.com/Nintendo"
+    },
+    "defaultAudioLanguage": "en-US",
+    "duration": "PT46M30S",
+    "dimension": "2d",
+    "definition": "hd",
+    "caption": "false",
+    "licensedContent": false,
+    "contentRating": {},
+    "projection": "rectangular",
+    "uploadStatus": "processed",
+    "privacyStatus": "public",
+    "license": "youtube",
+    "embeddable": true,
+    "publicStatsViewable": true,
+    "madeForKids": false,
+    "viewCount": 4153792,
+    "likeCount": 143721,
+    "favoriteCount": 0,
+    "commentCount": 8783,
+    "embedHtml": "<iframe width=\"480\" height=\"270\" src=\"//www.youtube.com/embed/UJ9Iz7HhU-I\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>",
+    "topicCategories": [
+        "https://en.wikipedia.org/wiki/Action-adventure_game",
+        "https://en.wikipedia.org/wiki/Action_game",
+        "https://en.wikipedia.org/wiki/Role-playing_video_game",
+        "https://en.wikipedia.org/wiki/Strategy_video_game",
+        "https://en.wikipedia.org/wiki/Video_game_culture"
+    ],
+    "actualStartTime": "2022-09-13T13:30:26Z",
+    "actualEndTime": "2022-09-13T14:46:23Z",
+    "scheduledStartTime": "2022-09-13T14:00:00Z"
+}
