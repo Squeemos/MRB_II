@@ -17,7 +17,9 @@ import glob
 
 def get_local_path(local_path : str) -> str:
     '''
-        Given a string that looks like: "./whatever/path"
+        Given a string that looks like:
+            - "./local/path/to/folder/"
+            - "./local/path/to/file.extension"
         return a string to the path that's OS independent
     '''
     return os.path.join(str(pathlib.Path(__file__).parent.resolve()), local_path)
