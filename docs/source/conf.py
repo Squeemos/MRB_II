@@ -36,3 +36,28 @@ exclude_patterns = []
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
+
+css_font_family = "Arial, Helvetica, sans-serif"
+
+# Theme options
+html_theme_options = {
+    "logo": "temp_icon.png",
+    # "logo_name": True,
+    # "logo_text_align": "center",
+
+    # "github_user": "Squeemos",
+    # "github_repo": "MRB_II",
+    # "github_button": True,
+    # "github_type": "star",
+
+    # "caption_font_size": ,
+    # "caption_font_family": ,
+
+    # "code_font_size": ,
+    # "code_font_family": ,
+
+    "font_family": css_font_family,
+
+    # "font_size": ,
+    "head_font_family": css_font_family,
+}
