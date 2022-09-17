@@ -21,8 +21,10 @@ def main():
     yt_reader = YouTubeReader()
 
     # Insert data
-    yt_reader.insert_videos("example_data/trending1.json", table)
-    # yt_reader.insert_videos(table, "example_data/trending2.json")
+    with open("example_data/trending1.json") as file:
+        t1 = json.load(file)
+    yt_reader.insert_videos(t1, table)
+    yt_reader.insert_videos("example_data/trending2.json", table)
 
     # Queries ---------------------------------
 
@@ -30,10 +32,18 @@ def main():
     vid = get_vids_by_title(table, "Nintendo Direct 9.13.2022")
     pprint(vid)
 
-    dt = datetime.strptime(vid["publishedAt"], "%Y-%m-%dT%H:%M:%SZ")
+    # Get video from date range
+    Published = Query()
+    vids = table.search(
+        (Published.publishedAtTimestamp > datetime(2022, 9, 12).timestamp())
+        &
+        (Published.publishedAtTimestamp < datetime(2022, 9, 14).timestamp())
+    )
+    pprint(vids)
+    print(len(vids))
 
-    with open("example_entry.json", "w") as outfile:
-        json.dump(vid, outfile, indent=4)
+    with open("query_result.json", "w") as outfile:
+        json.dump(vids, outfile, indent=4)
 
 
 def pprint(data):
@@ -41,8 +51,8 @@ def pprint(data):
 
 
 def get_vids_by_title(table, title):
-    query = Query()
-    vids = table.search(query.title == title)
+    Vids = Query()
+    vids = table.search(Vids.title == title)
 
     if len(vids) == 1:
         return vids[0]

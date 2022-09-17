@@ -26,6 +26,18 @@ class YouTubeReader:
         "commentCount",
     )
 
+    bool_names = (
+        "caption",
+        "licensedContent",
+        "embeddable",
+        "publicStatsViewable",
+        "madeForKids",
+    )
+
+    dt_names = (
+        "publishedAt",
+    )
+
     # Video Data ---------------------------------------------------------------
 
     def insert_videos(self, data: Union[str, dict], table: Union[TinyDB, Table]):
@@ -57,7 +69,7 @@ class YouTubeReader:
             item = self._flatten_dict(item)
 
             # Add time data to video
-            entry = {"time": time, "timestamp": timestamp}
+            entry = {"queryTime": time, "queryTimestamp": timestamp}
             entry.update(item)
 
             # Convert fields prior to insertion
@@ -68,11 +80,32 @@ class YouTubeReader:
 
     @staticmethod
     def _encode_fields(entry: dict):
+        """Encodes some integer, boolean, datetime fields
+
+        Parameters
+            entry: Individual video entry to be inserted in table.
+        """
         # Integer fields
         for int_name in YouTubeReader.int_names:
             try:
                 entry[int_name] = int(entry[int_name])
             except (KeyError, ValueError):
+                pass
+
+        # Boolean fields
+        for bool_name in YouTubeReader.bool_names:
+            try:
+                if isinstance(entry[bool_name], str):
+                    entry[bool_name] = bool(entry[bool_name])
+            except (KeyError, ValueError):
+                pass
+
+        # Datetime fields
+        for dt_name in YouTubeReader.dt_names:
+            try:
+                ts = datetime.strptime(entry[dt_name], "%Y-%m-%dT%H:%M:%SZ").timestamp()
+                entry[f"{dt_name}Timestamp"] = ts
+            except (KeyError, TypeError):
                 pass
 
         return entry
@@ -84,11 +117,15 @@ class YouTubeReader:
         """Flattens first level of dictionary."""
         flat = dict()
 
+        # For items in orignal json
         for k1, v1 in data.items():
             if isinstance(v1, dict):
+                # For items in part (ie snippet)
                 for k2, v2 in v1.items():
+                    # ex. title, description
                     flat[k2] = v2
             else:
+                # ex. kind, etag, id
                 flat[k1] = v1
 
         return flat
