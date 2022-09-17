@@ -41,7 +41,7 @@ class YouTubeReader:
     # Video Data ---------------------------------------------------------------
 
     def insert_videos(self, data: Union[str, dict], table: Union[TinyDB, Table]):
-        """Inserts video data into the given database or table.
+        """Inserts video data into the given ytdb or table.
 
         Each video in the given API query result is inserted separately into
         the given table as a new sample.
@@ -52,7 +52,7 @@ class YouTubeReader:
 
         Parameters:
             data: YT API response JSON either as filepath or loaded dict
-            table: TinyDB database or table which supports insertion
+            table: TinyDB ytdb or table which supports insertion
         """
         # If filepath given, convert .json at location to dict
         if isinstance(data, str):

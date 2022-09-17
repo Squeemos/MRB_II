@@ -2,7 +2,7 @@ import json
 
 from tinydb import Query
 
-from database import load
+from ytdb import load
 
 
 def main():

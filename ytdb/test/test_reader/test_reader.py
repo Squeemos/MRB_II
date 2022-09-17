@@ -3,10 +3,10 @@ from datetime import datetime
 
 from tinydb import TinyDB, Query
 
-from database.youtube_reader import YouTubeReader
+from ytdb.reader import YouTubeReader
 
 def main():
-    # Create database
+    # Create ytdb
     db = TinyDB("db_trending.json", indent=2)
     db.truncate()
 
