@@ -1,12 +1,9 @@
-import os
 import json
 from datetime import datetime
 
-import tinydb
 from tinydb import TinyDB, Query
 
-from youtube_reader import YouTubeReader
-
+from database.youtube_reader import YouTubeReader
 
 def main():
     # Create database
