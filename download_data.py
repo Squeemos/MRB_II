@@ -6,7 +6,7 @@
 
 import os
 from datetime import date
-from pathlib import Path
+import pathlib
 
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
@@ -15,14 +15,22 @@ import googleapiclient.errors
 import json
 import glob
 
+def get_local_path(local_path : str) -> str:
+    '''
+        Given a string that looks like:
+            - "./local/path/to/folder/"
+            - "./local/path/to/file.extension"
+        return a string to the path that's OS independent
+    '''
+    return os.path.join(str(pathlib.Path(__file__).parent.resolve()), local_path)
+
 def main():
     scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
-    local_path = Path(__file__).parent.resolve()
-    secret_key_dir = str(local_path / "./secret_keys/*.json")
-    api_key_dir = str(local_path / "./secret_keys/*.txt")
-    data_path = str(local_path / "./data/") + "/"
-    resources_path = str(local_path / "./resources/")
+    secret_key_dir = get_local_path("./secret_keys/*.json")
+    api_key_dir = get_local_path("./secret_keys/*.txt")
+    data_path = get_local_path("./data/")
+    resources_path = get_local_path("./resources/")
 
     # Disable OAuthlib's HTTPS verification when running locally.
     # *DO NOT* leave this option enabled in production.
