@@ -13,23 +13,14 @@ import googleapiclient.errors
 
 import json
 
-def get_local_path(local_path : str) -> str:
-    '''
-        Given a string that looks like:
-            - "./local/path/to/folder/"
-            - "./local/path/to/file.extension"
-        return a string to the path that's OS independent
-    '''
-    return os.path.join(str(pathlib.Path(__file__).parent.resolve()), local_path)
-
 def main():
     # Disable OAuthlib's HTTPS verification when running locally.
     # *DO NOT* leave this option enabled in production.
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
     scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
-    api_key_path = get_local_path("./api_key.txt")
-    output_path = get_local_path("./data/")
+    api_key_path = "./api_key.txt"
+    output_path = "./data/"
 
     # API information
     api_service_name = "youtube"
