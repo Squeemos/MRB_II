@@ -5,6 +5,9 @@ google-auth-httplib2
 
 # Database Interface
 tinydb
+BetterJSONStorage
+blosc2
+orjson
 
 # Apriori Models
 efficient-apriori
