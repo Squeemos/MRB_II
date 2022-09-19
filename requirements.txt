@@ -1,5 +1,13 @@
+# Google Interface
 google-api-python-client
 google-auth-oauthlib
 google-auth-httplib2
-efficient-apriori
+
+# Database Interface
 tinydb
+
+# Apriori Models
+efficient-apriori
+
+# Dashboarding
+streamlit
