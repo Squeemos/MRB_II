@@ -18,3 +18,6 @@ secret_keys/*.key
 .ipynb_checkpoints/
 .idea/
 __pycache__/
+
+#
+/experiments/betterjson/output/

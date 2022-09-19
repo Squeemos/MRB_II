@@ -3,21 +3,13 @@
 
 from tinydb import TinyDB
 
-from ytdb.storage import OnlineJSONStorage
+from ytdb.storage import OnlineJSONStorage, OnlineBetterJSONStorage
+
 
 YT_DATABASE_URL = "https://squeemos.pythonanywhere.com/static/youtube.json"
 
 
-def _docstring_parameter(*sub):
-    """Decorator for inserting variables into function docstrings."""
-    def dec(obj):
-        obj.__doc__ = obj.__doc__.format(*sub)
-        return obj
-    return dec
-
-
-@_docstring_parameter(YT_DATABASE_URL)
-def from_url(data_url: str = YT_DATABASE_URL):
+def from_url(data_url: str = YT_DATABASE_URL, storage: str = "default"):
     """Convenience function for loading a TinyDB ytdb from a web address.
 
     As of now, only supports loading databases in JSON format.
@@ -25,6 +17,10 @@ def from_url(data_url: str = YT_DATABASE_URL):
     Parameters
         data_url: Online address at which TinyDB data is retrievable.
             Defaults to YT_DATABASE_URL defined at top of 'ytdb.load'.
-            YT_DATABASE_URL = {0}
+        storage: String indicating storage type hosted at data_url.
+            Use "default" if normal JSON and "better" if BetterJSONStorage.
     """
-    return TinyDB(data_url, storage=OnlineJSONStorage)
+    if storage == "default":
+        return TinyDB(data_url, storage=OnlineJSONStorage)
+    elif storage == "better":
+        return TinyDB(data_url, storage=OnlineBetterJSONStorage)
