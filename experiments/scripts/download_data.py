@@ -18,10 +18,10 @@ import glob
 def main():
     scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
-    secret_key_dir = "./secret_keys/*.json"
-    api_key_dir = "./secret_keys/*.txt"
-    data_path = "./data/"
-    resources_path = "./resources/"
+    secret_key_dir = "../secret_keys/*.json"
+    api_key_dir = "../secret_keys/*.txt"
+    data_path = "../data/"
+    resources_path = "../resources/"
 
     # Disable OAuthlib's HTTPS verification when running locally.
     # *DO NOT* leave this option enabled in production.

@@ -3,21 +3,7 @@ import os
 import json
 from urllib.request import urlopen
 import tinydb
-
-class OnlineStorage(tinydb.Storage):
-    def __init__(self, link):
-        self.link = link
-
-    def read(self):
-        response = urlopen(self.link)
-        data = json.loads(response.read())
-        return data
-
-    def write(self, data):
-        pass
-
-    def close(self):
-        pass
+from ytdb.storage import OnlineBetterJSONStorage
 
 @st.experimental_singleton
 def get_database(url):

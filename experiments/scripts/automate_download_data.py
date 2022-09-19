@@ -19,8 +19,8 @@ def main():
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
     scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
-    api_key_path = "./api_key.txt"
-    output_path = "./data/"
+    api_key_path = "../api_key.txt"
+    output_path = "../data/"
 
     # API information
     api_service_name = "youtube"

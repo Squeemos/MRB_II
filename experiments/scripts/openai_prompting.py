@@ -2,7 +2,7 @@ import os
 import openai
 
 def main():
-    with open("./secret_keys/open_ai.key", "rt") as f:
+    with open("../secret_keys/open_ai.key", "rt") as f:
         openai.api_key = f.read()
 
 
