@@ -31,12 +31,14 @@ class OnlineBetterJSONStorage(Storage):
 
 
 def main():
-    # test_local()
+    item1 = test_local(40)
 
-    test_online()
+    item2 = test_online(40)
+
+    print(f"Items match? : {item1 == item2}")
 
 
-def test_local():
+def test_local(item_no):
     with TinyDB(Path("output/better.json"), storage=BetterJSONStorage) as db:
         table = db.table("TRENDING")
 
@@ -44,8 +46,10 @@ def test_local():
         result = table.search(q.viewCount > 5_000_000)
         print(f"Number of trending vids over 5M views: {len(result)}")
 
+        return json.dumps(table.all()[item_no], indent=4)
 
-def test_online():
+
+def test_online(item_no):
     url = "https://squeemos.pythonanywhere.com/static/better.json"
 
     with TinyDB(url, storage=OnlineBetterJSONStorage) as db:
@@ -54,6 +58,8 @@ def test_online():
         q = Query()
         result = table.search(q.viewCount > 5_000_000)
         print(f"Number of trending vids over 5M views: {len(result)}")
+
+        return json.dumps(table.all()[item_no], indent=4)
 
 
 
