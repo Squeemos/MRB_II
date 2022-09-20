@@ -64,7 +64,8 @@ class YouTubeReader:
         time = dt.strftime("%Y-%m-%dT%H:%M:%SZ")
         timestamp = dt.timestamp()
 
-        # Insert each video individually
+        # Create individual entries
+        entries = []
         for item in data["items"]:
             item = self._flatten_dict(item)
 
@@ -75,8 +76,10 @@ class YouTubeReader:
             # Convert fields prior to insertion
             self._encode_fields(entry)
 
-            # Insert into the table
-            table.insert(entry)
+            entries.append(entry)
+
+        # Insert new entries into the table
+        table.insert_multiple(entries)
 
     @staticmethod
     def _encode_fields(entry: dict):
