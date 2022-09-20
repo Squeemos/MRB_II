@@ -14,3 +14,4 @@ efficient-apriori
 
 # Dashboarding
 streamlit
+matplotlib
