@@ -5,6 +5,7 @@ docs/build/
 secret_keys/*.json
 secret_keys/*.txt
 secret_keys/*.key
+virtual_environments/
 
 .DS_Store
 

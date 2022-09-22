@@ -4,7 +4,7 @@ import datetime
 from matplotlib import pyplot as plt
 import pandas as pd
 
-from ytdb.storage import OnlineJSONStorage
+from ytdb.storage import OnlineBetterJSONStorage
 
 @st.experimental_singleton
 def get_database(url):
@@ -14,7 +14,7 @@ def get_database(url):
         args:
             url : String to url ending with ".json"
     '''
-    return tinydb.TinyDB(url, storage = OnlineJSONStorage)
+    return tinydb.TinyDB(url, storage = OnlineBetterJSONStorage)
 
 @st.experimental_singleton
 def get_table(_database, table_name):
@@ -28,7 +28,9 @@ def get_table(_database, table_name):
     return _database.table(table_name)
 
 def main():
+    # Config
     st.set_page_config(layout = "wide")
+
     page = st.sidebar.selectbox("Pages",
         ("Opening Page",
         "Playground", )
