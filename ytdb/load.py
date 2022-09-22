@@ -9,7 +9,7 @@ from ytdb.storage import OnlineJSONStorage, OnlineBetterJSONStorage
 YT_DATABASE_URL = "https://squeemos.pythonanywhere.com/static/youtube.json"
 
 
-def from_url(data_url: str = YT_DATABASE_URL, storage_type: str = "default"):
+def from_url(data_url: str = YT_DATABASE_URL, storage_type: str = "better"):
     """Convenience function for loading a TinyDB ytdb from a web address.
 
     As of now, only supports loading databases in JSON format.
