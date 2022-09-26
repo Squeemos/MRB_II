@@ -36,6 +36,14 @@ def get_table(_database, table_name):
 def sidebar_buttons_overtime(id):
     return []
 
+@st.experimental_memo
+def get_all_ids(_table):
+    all_ids = set()
+    for entry in _table:
+        if isinstance(entry["id"], str):
+            all_ids.add(entry["id"])
+    return list(all_ids)
+
 def main():
     # Config
     st.set_page_config(layout = "wide")
@@ -84,7 +92,6 @@ def main():
 
         st.write(sidebar_buttons)
 
-
     elif page == "Playground":
         if st.sidebar.checkbox("Display graphs for trending videos"):
             view_count_min = st.sidebar.slider("How many views should the video have?",
@@ -120,10 +127,7 @@ def main():
             st.pyplot(fig)
 
         if st.sidebar.checkbox("Look through video thumbnails"):
-            all_ids = set()
-            for entry in trending:
-                all_ids.add(entry["id"])
-            all_ids = list(all_ids)
+            all_ids = get_all_ids(trending)
             title_query = tinydb.Query()
             all_titles = {trending.search(title_query.id == id_val)[0]["title"]:id_val for id_val in all_ids}
             title = st.selectbox("Which video thumbnail would you like to see?", all_titles)
