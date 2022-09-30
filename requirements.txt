@@ -13,5 +13,5 @@ orjson
 efficient-apriori
 
 # Dashboarding
-streamlit
-matplotlib
+dash
+plotly

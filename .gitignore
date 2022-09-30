@@ -1,5 +1,6 @@
 # Build and Release Folders
 docs/build/
+*.egg-info/
 
 # Other files and folders
 secret_keys/*.json
