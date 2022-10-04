@@ -1,16 +1,19 @@
-"""Contains YouTubeReader that inserts YTD API data into Pandas DataFrames.
+"""Contains YouTubeReader class that inserts YTD API data in TinyDB formats.
 """
+
+from typing import Union
+
+import json
 
 from datetime import datetime
 from pytz import timezone
 
-import pandas as pd
+from tinydb import TinyDB
+from tinydb.table import Table
 
 
 class YouTubeReader:
-    """Reader for inserting YouTube Data API responses into Pandas DataFrames.
-
-    The DataFrames being created or updated must be pickled .xz files.
+    """Reader for inserting YouTube Data API responses into TinyDB formats.
     """
 
     # Features to Encode -------------------------------------------------------
@@ -32,31 +35,34 @@ class YouTubeReader:
     )
 
     dt_names = (
-        "queryTime",
         "publishedAt",
     )
 
     # Video Data ---------------------------------------------------------------
 
-    def insert_videos(self, data: dict, path: str):
-        """Inserts video data into the pickled df (.xz) at the given path.
+    def insert_videos(self, data: Union[str, dict], table: Union[TinyDB, Table]):
+        """Inserts video data into the given ytdb or table.
 
-        Several fields are encoded according to their datatype (datetimes,
-        integers, booleans, ...)
+        Each video in the given API query result is inserted separately into
+        the given table as a new sample.
+
+        Each inserted sample is given a UTC timestamp. Additionally, each of
+        the query 'parts' (i.e. 'statistics', 'snippet') are flattened. Some
+        fields' data type are converted for easier TinyDB querying.
 
         Parameters:
-            data: YT API response as a dictionary.
-            path: Path to either existing or new pickled dataframe file (.xz)
+            data: YT API response JSON either as filepath or loaded dict
+            table: TinyDB ytdb or table which supports insertion
         """
-        # Attempt to load dataframe from given path
-        try:
-            df = pd.read_pickle(path)
-        except FileNotFoundError:
-            df = pd.DataFrame()
+        # If filepath given, convert .json at location to dict
+        if isinstance(data, str):
+            with open(data, "r") as file:
+                data = json.load(file)
 
         # Create time string from current UTC time and f
         dt = datetime.now(timezone("UTC"))
         time = dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+        timestamp = dt.timestamp()
 
         # Create individual entries
         entries = []
@@ -64,7 +70,7 @@ class YouTubeReader:
             item = self._flatten_dict(item)
 
             # Add time data to video
-            entry = {"queryTime": time}
+            entry = {"queryTime": time, "queryTimestamp": timestamp}
             entry.update(item)
 
             # Convert fields prior to insertion
@@ -73,19 +79,7 @@ class YouTubeReader:
             entries.append(entry)
 
         # Insert new entries into the table
-        df_new = pd.DataFrame(entries)
-        df = pd.concat(
-            [df, df_new], ignore_index=True, sort=False
-        )
-
-        # Convert datetimes
-        for dt_feat in YouTubeReader.dt_names:
-            df[dt_feat] = pd.to_datetime(df[dt_feat])
-
-        # Pickle dict
-        pd.to_pickle(
-            df, path, compression={"method": "xz"}, protocol=-1
-        )
+        table.insert_multiple(entries)
 
     @staticmethod
     def _encode_fields(entry: dict):
@@ -107,6 +101,14 @@ class YouTubeReader:
                 if isinstance(entry[bool_name], str):
                     entry[bool_name] = bool(entry[bool_name])
             except (KeyError, ValueError):
+                pass
+
+        # Datetime fields
+        for dt_name in YouTubeReader.dt_names:
+            try:
+                ts = datetime.strptime(entry[dt_name], "%Y-%m-%dT%H:%M:%SZ").timestamp()
+                entry[f"{dt_name}Timestamp"] = ts
+            except (KeyError, TypeError):
                 pass
 
         return entry
