@@ -15,6 +15,7 @@ efficient-apriori
 # Dashboarding
 dash
 plotly
+pandas
 
 #
 pandas
