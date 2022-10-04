@@ -124,7 +124,8 @@ class YouTubeReader:
                 # For items in part (ie snippet)
                 for k2, v2 in v1.items():
                     # ex. title, description
-                    flat[k2] = v2
+                    if k2 not in flat:
+                        flat[k2] = v2
             else:
                 # ex. kind, etag, id
                 flat[k1] = v1
