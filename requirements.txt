@@ -16,6 +16,3 @@ efficient-apriori
 dash
 plotly
 pandas
-
-#
-pandas
