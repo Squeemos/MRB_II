@@ -10,7 +10,7 @@ import plotly.express as px
 import pandas as pd
 
 # Local imports
-from yt_accessor import YTAccessor
+from yt_accessor import YTAccessor, get_categories
 
 app = Dash()
 
@@ -37,14 +37,6 @@ app.layout = html.Div(children = [
     dcc.Graph(id = "views_based_on_slider")
 ])
 
-# Simple callback that stores the dataframe
-# @app.callback(
-#     Output("dataframe", "data"),
-#     Input("dataframe", "data")
-# )
-# def generate_dataframe(value):
-#     return pd.read_pickle("https://squeemos.pythonanywhere.com/static/yt_trending.xz").to_dict()
-
 # Get and memoize the dataframe
 @cache.memoize(timeout = 600)
 def generate_dataframe(url):
@@ -60,21 +52,25 @@ def update_view_count_graph(view_slider):
     # Convert to int and the dataframe
     video_views = int(view_slider) * 1_000_000
     df = generate_dataframe("https://squeemos.pythonanywhere.com/static/archive.xz") # Change to updated one later
+    # categories = get_categories(False)
 
     # Perform the query
     ids = df[df["viewCount"] >= video_views]["id"].unique()
     df = df[df["id"].isin(ids)]
+    # Only look at a certain category
+    # df = df[df["categoryId"] == categories["Gaming"].value]
 
     # Create a figure with plotly express
-    new_fig = px.line(df,
-        x = df.yt["queryTime"],
-        y = df.yt["viewCount"],
-        color = df.yt["title"],
+    new_fig = px.line(
+        df,
+        x = df.yt.get_alias("queryTime"),
+        y = df.yt.get_alias("viewCount"),
+        color = df.yt.get_alias("title"),
         title = f"Trending lifetime of videos that gained over {video_views:,} views",
         labels = {
-            "queryTime" : "Date",
-            "viewCount" : "Views in Millions",
-            "title" : "Video Title"
+            df.yt.get_alias("queryTime") : "Date",
+            df.yt.get_alias("viewCount") : "Views in Millions",
+            df.yt.get_alias("title") : "Video Title"
             }
         )
     return new_fig
