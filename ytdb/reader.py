@@ -16,24 +16,24 @@ class YouTubeReader:
     # Features to Encode -------------------------------------------------------
 
     int_names = (
-        "categoryId",
-        "viewCount",
-        "likeCount",
-        "favoriteCount",
-        "commentCount",
+        "snippet.categoryId",
+        "statistics.viewCount",
+        "statistics.likeCount",
+        "statistics.favoriteCount",
+        "statistics.commentCount",
     )
 
     bool_names = (
-        "caption",
-        "licensedContent",
-        "embeddable",
-        "publicStatsViewable",
-        "madeForKids",
+        "contentDetails.caption",
+        "contentDetails.licensedContent",
+        "status.embeddable",
+        "status.publicStatsViewable",
+        "status.madeForKids",
     )
 
     dt_names = (
         "queryTime",
-        "publishedAt",
+        "snippet.publishedAt",
     )
 
     # Video Data ---------------------------------------------------------------
@@ -79,8 +79,8 @@ class YouTubeReader:
         )
 
         # Convert datetimes
-        for dt_feat in YouTubeReader.dt_names:
-            df[dt_feat] = pd.to_datetime(df[dt_feat])
+        #for dt_feat in YouTubeReader.dt_names:
+        #    df[dt_feat] = pd.to_datetime(df[dt_feat])
 
         # Pickle dict
         pd.to_pickle(
@@ -116,18 +116,6 @@ class YouTubeReader:
     @staticmethod
     def _flatten_dict(data: dict):
         """Flattens first level of dictionary."""
-        flat = dict()
-
-        # For items in orignal json
-        for k1, v1 in data.items():
-            if isinstance(v1, dict):
-                # For items in part (ie snippet)
-                for k2, v2 in v1.items():
-                    # ex. title, description
-                    if k2 not in flat:
-                        flat[k2] = v2
-            else:
-                # ex. kind, etag, id
-                flat[k1] = v1
+        flat = list(pd.json_normalize(data).T.to_dict().values())[0]
 
         return flat
