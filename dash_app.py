@@ -3,13 +3,24 @@
 
 # Dash things
 from dash import Dash, html, dcc, Input, Output, State
+from flask_caching import Cache
 
 # Everything else
 import plotly.express as px
-import plotly.graph_objects as go
 import pandas as pd
 
+# Local imports
+from yt_accessor import YTAccessor
+
 app = Dash()
+
+config = {
+    "DEBUG": True,          # some Flask specific configs
+    "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
+    "CACHE_DEFAULT_TIMEOUT": 600
+}
+cache = Cache()
+cache.init_app(app.server, config=config)
 
 app.layout = html.Div(children = [
     html.H1(children = "YouTube API Dashboard"),
@@ -22,41 +33,43 @@ app.layout = html.Div(children = [
                id = "view_slider"
     ),
 
-    # Storage of the dataframe in memory, valid until refreshed or closed
-    dcc.Store(id = "dataframe", storage_type = "memory", data = []),
     # The graph, to display the graph here, output "figure" to "id"
     dcc.Graph(id = "views_based_on_slider")
 ])
 
 # Simple callback that stores the dataframe
-@app.callback(
-    Output("dataframe", "data"),
-    Input("dataframe", "data")
-)
-def generate_dataframe(value):
-    return pd.read_pickle("https://squeemos.pythonanywhere.com/static/yt_trending.xz").to_dict()
+# @app.callback(
+#     Output("dataframe", "data"),
+#     Input("dataframe", "data")
+# )
+# def generate_dataframe(value):
+#     return pd.read_pickle("https://squeemos.pythonanywhere.com/static/yt_trending.xz").to_dict()
+
+# Get and memoize the dataframe
+@cache.memoize(timeout = 600)
+def generate_dataframe(url):
+    return pd.read_pickle(url)
 
 # Better callback to dispolay some things
 # Output is a figure to the dcc.Graph
-# Input is the slider and the dataframe
+# Input is the slider
 @app.callback(
     Output("views_based_on_slider", "figure"),
-    [Input("view_slider", "value"),
-    Input("dataframe", "data")])
-def update_view_count_graph(view_slider, data):
+    [Input("view_slider", "value")])
+def update_view_count_graph(view_slider):
     # Convert to int and the dataframe
     video_views = int(view_slider) * 1_000_000
-    df = pd.DataFrame(data)
+    df = generate_dataframe("https://squeemos.pythonanywhere.com/static/archive.xz") # Change to updated one later
 
     # Perform the query
     ids = df[df["viewCount"] >= video_views]["id"].unique()
-    result = df[df["id"].isin(ids)]
+    df = df[df["id"].isin(ids)]
 
     # Create a figure with plotly express
-    new_fig = px.line(result,
-        x = "queryTime",
-        y = "viewCount",
-        color = "title",
+    new_fig = px.line(df,
+        x = df.yt["queryTime"],
+        y = df.yt["viewCount"],
+        color = df.yt["title"],
         title = f"Trending lifetime of videos that gained over {video_views:,} views",
         labels = {
             "queryTime" : "Date",
