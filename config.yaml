@@ -1,6 +1,15 @@
 APP_CONFIG:
   name : YouTube Api Dashboard
+
 CACHE_CONFIG:
   DEBUG : TRUE
   CACHE_TYPE : SimpleCache
   CACHE_DEFAULT_TIMEOUT : 600
+
+PATHS:
+  LOCAL:
+    DF : ./database/yt_trending.xz
+    CATEGORIES : ./database/video_categories.json
+  ONLINE:
+    DF : https://squeemos.pythonanywhere.com/static/yt_trending.xz
+    CATEGORIES : https://squeemos.pythonanywhere.com/static/video_categories.json

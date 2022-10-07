@@ -22,7 +22,7 @@ cache = Cache()
 
 cache.init_app(app.server, config = total_config["CACHE_CONFIG"])
 
-categories = YouTubeCategories(local = False)
+categories = YouTubeCategories(total_config["PATHS"]["ONLINE"]["CATEGORIES"], local = False)
 
 app.layout = html.Div(children = [
     html.H1(children = "YouTube API Dashboard"),
@@ -61,7 +61,7 @@ def get_dataframe(url):
 def update_view_count_graph(view_slider, category_id):
     # Convert to int and the dataframe
     video_views = int(view_slider) * 1_000_000
-    df = get_dataframe("https://squeemos.pythonanywhere.com/static/yt_trending.xz") # Change to updated one later
+    df = get_dataframe(total_config["PATHS"]["ONLINE"]["DF"])
 
     # Perform the query
     ids = df[df.yt["viewCount"] >= video_views]["id"].unique()
