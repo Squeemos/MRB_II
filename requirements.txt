@@ -16,3 +16,4 @@ efficient-apriori
 dash
 plotly
 pandas
+pyyaml
