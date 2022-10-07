@@ -19,3 +19,11 @@ class YouTubeCategories(object):
 
     def get_list(self):
         return list(self.__dictionary.keys())
+
+    @property
+    def t_to_i(self):
+        return self.__dictionary
+
+    @property
+    def i_to_t(self):
+        return {v:k for k,v in self.__dictionary.items()}

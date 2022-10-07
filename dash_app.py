@@ -82,9 +82,10 @@ def update_view_count_graph(view_slider, category_id):
             df.yt.get_alias("queryTime") : "Date",
             df.yt.get_alias("viewCount") : "Views in Millions",
             df.yt.get_alias("title") : "Video Title"
-            }
-        )
+        }
+    )
     return new_fig
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
