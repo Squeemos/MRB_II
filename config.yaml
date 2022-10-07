@@ -1,0 +1,6 @@
+APP_CONFIG:
+  name : YouTube Api Dashboard
+CACHE_CONFIG:
+  DEBUG : TRUE
+  CACHE_TYPE : SimpleCache
+  CACHE_DEFAULT_TIMEOUT : 600

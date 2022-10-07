@@ -8,20 +8,19 @@ from flask_caching import Cache
 # Everything else
 import plotly.express as px
 import pandas as pd
+import yaml
 
 # Local imports
 from utils.yt_accessor import YouTubeAccessor
 from utils.categories import YouTubeCategories
 
-app = Dash()
+with open("./config.yaml") as stream:
+    total_config = yaml.safe_load(stream)
 
-config = {
-    "DEBUG": True,          # some Flask specific configs
-    "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
-    "CACHE_DEFAULT_TIMEOUT": 600
-}
+app = Dash(*total_config["APP_CONFIG"])
 cache = Cache()
-cache.init_app(app.server, config=config)
+
+cache.init_app(app.server, config = total_config["CACHE_CONFIG"])
 
 categories = YouTubeCategories(local = False)
 
