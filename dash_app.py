@@ -10,7 +10,8 @@ import plotly.express as px
 import pandas as pd
 
 # Local imports
-from yt_accessor import YTAccessor, get_categories
+from utils.yt_accessor import YouTubeAccessor
+from utils.categories import YouTubeCategories
 
 app = Dash()
 
@@ -22,13 +23,22 @@ config = {
 cache = Cache()
 cache.init_app(app.server, config=config)
 
+categories = YouTubeCategories(local = False)
+
 app.layout = html.Div(children = [
     html.H1(children = "YouTube API Dashboard"),
     html.Div(children = "A simple dashboard for ineracting with and exploring YouTube API data"),
 
+    # Dropdown to select video category
+    dcc.Dropdown(
+        options = categories.get_list(),
+        multi = True,
+        id = "category_id"
+    ),
+
     # Simple slider to select values
     # To get the value from the slider, look at "id" and read "value"
-    dcc.Slider(1, 20, 1,
+    dcc.Slider(0, 20, 1,
                value = 5,
                id = "view_slider"
     ),
@@ -39,7 +49,7 @@ app.layout = html.Div(children = [
 
 # Get and memoize the dataframe
 @cache.memoize(timeout = 600)
-def generate_dataframe(url):
+def get_dataframe(url):
     return pd.read_pickle(url)
 
 # Better callback to dispolay some things
@@ -47,18 +57,20 @@ def generate_dataframe(url):
 # Input is the slider
 @app.callback(
     Output("views_based_on_slider", "figure"),
-    [Input("view_slider", "value")])
-def update_view_count_graph(view_slider):
+    [Input("view_slider", "value"),
+    Input("category_id", "value")])
+def update_view_count_graph(view_slider, category_id):
     # Convert to int and the dataframe
     video_views = int(view_slider) * 1_000_000
-    df = generate_dataframe("https://squeemos.pythonanywhere.com/static/archive.xz") # Change to updated one later
-    # categories = get_categories(False)
+    df = get_dataframe("https://squeemos.pythonanywhere.com/static/archive.xz") # Change to updated one later
 
     # Perform the query
     ids = df[df["viewCount"] >= video_views]["id"].unique()
     df = df[df["id"].isin(ids)]
     # Only look at a certain category
-    # df = df[df["categoryId"] == categories["Gaming"].value]
+    if category_id is not None and len(category_id) != 0:
+        category_ids = [categories[cat].value for cat in category_id]
+        df = df[df["categoryId"].isin(category_ids)]
 
     # Create a figure with plotly express
     new_fig = px.line(
