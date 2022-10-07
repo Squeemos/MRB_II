@@ -17,7 +17,7 @@ from utils.categories import YouTubeCategories
 with open("./config.yaml") as stream:
     total_config = yaml.safe_load(stream)
 
-app = Dash(*total_config["APP_CONFIG"])
+app = Dash(**total_config["APP_CONFIG"])
 cache = Cache()
 
 cache.init_app(app.server, config = total_config["CACHE_CONFIG"])
@@ -61,15 +61,15 @@ def get_dataframe(url):
 def update_view_count_graph(view_slider, category_id):
     # Convert to int and the dataframe
     video_views = int(view_slider) * 1_000_000
-    df = get_dataframe("https://squeemos.pythonanywhere.com/static/archive.xz") # Change to updated one later
+    df = get_dataframe("https://squeemos.pythonanywhere.com/static/yt_trending.xz") # Change to updated one later
 
     # Perform the query
-    ids = df[df["viewCount"] >= video_views]["id"].unique()
-    df = df[df["id"].isin(ids)]
+    ids = df[df.yt["viewCount"] >= video_views]["id"].unique()
+    df = df[df.yt["id"].isin(ids)]
     # Only look at a certain category
     if category_id is not None and len(category_id) != 0:
         category_ids = [categories[cat].value for cat in category_id]
-        df = df[df["categoryId"].isin(category_ids)]
+        df = df[df.yt["categoryId"].isin(category_ids)]
 
     # Create a figure with plotly express
     new_fig = px.line(

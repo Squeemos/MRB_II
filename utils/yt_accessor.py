@@ -4,7 +4,10 @@ import pandas as pd
 class YouTubeAccessor(object):
 
     aliases = {
-        "likeCount" : "statistics.likeCount"
+        "likeCount" : "statistics.likeCount",
+        "viewCount" : "statistics.viewCount",
+        "title" : "snippet.title",
+        "categoryId" : "snippet.categoryId"
     }
 
     # df is the dataframe to access
