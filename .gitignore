@@ -7,6 +7,7 @@ secret_keys/*.json
 secret_keys/*.txt
 secret_keys/*.key
 virtual_environments/
+ytdb/download/api_key.txt
 
 .DS_Store
 
@@ -23,3 +24,4 @@ __pycache__/
 
 #
 /experiments/betterjson/output/
+

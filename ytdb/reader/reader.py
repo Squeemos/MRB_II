@@ -1,5 +1,4 @@
-"""Contains YouTubeReader that inserts YTD API data into Pandas DataFrames.
-"""
+"""Contains YouTubeReader that inserts YTD API data into Pandas DataFrames."""
 
 from datetime import datetime
 from pytz import timezone
@@ -36,6 +35,14 @@ class YouTubeReader:
         "snippet.publishedAt",
     )
 
+    # Constructor --------------------------------------------------------------
+
+    def __init__(self, time: str = None):
+        if time is None:
+            time = datetime.now(timezone("UTC")).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+        self.time = time
+
     # Video Data ---------------------------------------------------------------
 
     def insert_videos(self, data: dict, path: str):
@@ -54,17 +61,13 @@ class YouTubeReader:
         except FileNotFoundError:
             df = pd.DataFrame()
 
-        # Create time string from current UTC time and f
-        dt = datetime.now(timezone("UTC"))
-        time = dt.strftime("%Y-%m-%dT%H:%M:%SZ")
-
         # Create individual entries
         entries = []
         for item in data["items"]:
             item = self._flatten_dict(item)
 
             # Add time data to video
-            entry = {"queryTime": time}
+            entry = {"queryTime": self.time}
             entry.update(item)
 
             # Convert fields prior to insertion
@@ -79,8 +82,8 @@ class YouTubeReader:
         )
 
         # Convert datetimes
-        #for dt_feat in YouTubeReader.dt_names:
-        #    df[dt_feat] = pd.to_datetime(df[dt_feat])
+        for dt_feat in YouTubeReader.dt_names:
+            df[dt_feat] = pd.to_datetime(df[dt_feat], utc=True)
 
         # Pickle dict
         pd.to_pickle(

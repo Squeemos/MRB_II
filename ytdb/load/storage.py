@@ -2,7 +2,7 @@
 
 Contains storage classes that allow the loading of TinyDB databases that
 are hosted online with both default and BetterJSONStorage storages. These
-are necessarily read-only.
+are necessarily load-only.
 """
 
 import json

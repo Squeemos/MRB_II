@@ -3,7 +3,7 @@
 
 from tinydb import TinyDB
 
-from ytdb.storage import OnlineJSONStorage, OnlineBetterJSONStorage
+from ytdb.load.storage import OnlineJSONStorage, OnlineBetterJSONStorage
 
 
 YT_DATABASE_URL = "https://squeemos.pythonanywhere.com/static/youtube.json"

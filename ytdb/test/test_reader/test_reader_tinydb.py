@@ -3,7 +3,7 @@ from datetime import datetime
 
 from tinydb import TinyDB, Query
 
-from ytdb.reader import YouTubeReader
+from ytdb.reader.reader import YouTubeReader
 
 def main():
     # Create ytdb

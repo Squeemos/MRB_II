@@ -1,7 +1,7 @@
 import tinydb
 import json
 
-from ytdb.storage import OnlineJSONStorage
+from ytdb.load.storage import OnlineJSONStorage
 
 def main():
     my_url = "https://squeemos.pythonanywhere.com/static/youtube.json"

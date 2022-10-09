@@ -36,7 +36,7 @@ app.layout = html.Div(children = [
     ),
 
     # Simple slider to select values
-    # To get the value from the slider, look at "id" and read "value"
+    # To get the value from the slider, look at "id" and load "value"
     dcc.Slider(0, 20, 1,
                value = 5,
                id = "view_slider"

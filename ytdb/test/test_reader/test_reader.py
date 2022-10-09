@@ -1,6 +1,6 @@
 import json
 
-from ytdb.reader import YouTubeReader
+from ytdb.reader.reader import YouTubeReader
 
 import pandas as pd
 
