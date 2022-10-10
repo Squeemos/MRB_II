@@ -30,7 +30,7 @@ app.layout = html.Div(children = [
 
     # Dropdown to select video category
     dcc.Dropdown(
-        options = categories.get_list(),
+        options = categories.titles,
         multi = True,
         id = "category_id"
     ),
@@ -51,7 +51,7 @@ app.layout = html.Div(children = [
 def get_dataframe(url):
     return pd.read_pickle(url)
 
-# Better callback to dispolay some things
+# Better callback to display some things
 # Output is a figure to the dcc.Graph
 # Input is the slider
 @app.callback(
@@ -68,7 +68,7 @@ def update_view_count_graph(view_slider, category_id):
     df = df[df.yt["id"].isin(ids)]
     # Only look at a certain category
     if category_id is not None and len(category_id) != 0:
-        category_ids = [categories[cat].value for cat in category_id]
+        category_ids = categories[category_id]
         df = df[df.yt["categoryId"].isin(category_ids)]
 
     # Create a figure with plotly express
