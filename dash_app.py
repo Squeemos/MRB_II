@@ -2,7 +2,7 @@
 # visit http://127.0.0.1:8050/ in your web browser.
 
 # Dash things
-from dash import Dash, html, dcc, Input, Output, State
+from dash import Dash, html, dcc, Input, Output, State, dash_table
 from flask_caching import Cache
 
 # Everything else
@@ -43,7 +43,8 @@ app.layout = html.Div(children = [
     ),
 
     # The graph, to display the graph here, output "figure" to "id"
-    dcc.Graph(id = "views_based_on_slider")
+    dcc.Graph(id = "views_based_on_slider"),
+    dcc.Graph(id = "bar_chart_categories")
 ])
 
 # Get and memoize the dataframe
@@ -84,6 +85,34 @@ def update_view_count_graph(view_slider, category_id):
             df.yt.get_alias("title") : "Video Title"
         }
     )
+    return new_fig
+
+@app.callback(
+    Output("bar_chart_categories", "figure"),
+    [Input("category_id", "value")]
+)
+def update_bar_chart_categories(category_id):
+    df = get_dataframe(total_config["PATHS"]["ONLINE"]["DF"])
+    df = df.drop_duplicates(df.yt.get_alias("id"))
+    grouped = df.groupby(df.yt.get_alias("categoryId")).size().reset_index()
+    grouped.columns = [grouped.yt.get_alias("categoryId"), "count"]
+    if category_id is not None and len(category_id) != 0:
+        category_ids = categories[category_id]
+        grouped = grouped[grouped.yt["categoryId"].isin(category_ids)]
+
+    grouped[grouped.yt.get_alias("categoryId")] = grouped[grouped.yt.get_alias("categoryId")].apply(lambda x: categories.id_to_title[x])
+
+    new_fig = px.bar(
+        grouped,
+        x = grouped.yt.get_alias("categoryId"),
+        y = grouped.yt.get_alias("count"),
+        color = grouped.yt.get_alias("count"),
+        labels = {
+            grouped.yt.get_alias("categoryId") : "Category",
+            grouped.yt.get_alias("count") : "Number of Videos"
+        }
+    )
+
     return new_fig
 
 

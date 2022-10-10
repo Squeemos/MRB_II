@@ -76,4 +76,4 @@ class YouTubeCategories(object):
 
     @property
     def id_to_title(self) -> dict:
-        return self.__title_to_id
+        return self.__id_to_title
