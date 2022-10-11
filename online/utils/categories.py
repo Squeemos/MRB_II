@@ -13,7 +13,7 @@ class YouTubeCategories(object):
             self.__key = key
             self.__value = value
 
-        def __eq__(self, other):
+        def __eq__(self, other) -> bool:
             '''
                 Because values are keys, a == this is when a is in value
             '''
