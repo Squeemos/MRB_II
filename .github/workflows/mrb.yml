@@ -6,8 +6,7 @@ on:
   pull_request:
     branches: [ "main" ]
 
-permissions:
-  contents: write
+permissions: read-all|write-all
 
 jobs:
   build:
@@ -17,11 +16,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: copy dashboard
-      run: |
-          cp "./dash_app.py" "./online/dash_app.py"
+      run: cp "./dash_app.py" "./online/dash_app.py"
     - name: copy utils
-      run: |
-          cp -a "./utils/." "./online/"
+      run: cp -a "./utils/." "./online/"
     - name: copy ytdb
-      run: |
-          cp -a "./ytdb/." "./online/"
+      run: cp -a "./ytdb/." "./online/"
