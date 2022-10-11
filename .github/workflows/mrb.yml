@@ -21,7 +21,7 @@ jobs:
           cp "./dash_app.py" "./online/dash_app.py"
     - name: copy utils
       run: |
-          cp -a "./utilts/." "./online/"
+          cp -a "./utils/." "./online/"
 
     - name: copy ytdb
       run: |
