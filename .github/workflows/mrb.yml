@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -22,7 +22,6 @@ jobs:
     - name: copy utils
       run: |
           cp -a "./utils/." "./online/"
-
     - name: copy ytdb
       run: |
           cp -a "./ytdb/." "./online/"
