@@ -1,0 +1,28 @@
+name: Python application
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: copy dashboard
+      run: |
+          cp "./dash_app.py" "./online/dash_app.py"
+    - name: copy utils
+      run: |
+          cp -a "./utilts/." "./online/"
+
+    - name: copy ytdb
+      run: |
+          cp -a "./ytdb/." "./online/"

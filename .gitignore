@@ -9,6 +9,8 @@ secret_keys/*.key
 virtual_environments/
 ytdb/download/api_key.txt
 
+./config.yml
+
 .DS_Store
 
 # Executables
