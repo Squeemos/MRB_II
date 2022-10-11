@@ -17,8 +17,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: copy dashboard
+      shell: bash
       run: cp "./dash_app.py" "./online/dash_app.py"
     - name: copy utils
+      shell: bash
       run: cp -a "./utils/." "./online/utils/"
     - name: copy ytdb
+      shell: bash
       run: cp -a "./ytdb/." "./online/ytdb/"
