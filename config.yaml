@@ -7,9 +7,7 @@ CACHE_CONFIG:
   CACHE_DEFAULT_TIMEOUT : 600
 
 PATHS:
-  LOCAL:
-    DF : ./database/yt_trending.xz
-    CATEGORIES : ./database/video_categories.json
-  ONLINE:
-    DF : https://squeemos.pythonanywhere.com/static/yt_trending.xz
-    CATEGORIES : https://squeemos.pythonanywhere.com/static/video_categories.json
+  DF : https://squeemos.pythonanywhere.com/static/yt_trending.xz
+  CATEGORIES : https://squeemos.pythonanywhere.com/static/video_categories.json
+
+LOCAL : TRUE

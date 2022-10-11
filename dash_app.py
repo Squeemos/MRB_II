@@ -22,11 +22,11 @@ cache = Cache()
 
 cache.init_app(app.server, config = total_config["CACHE_CONFIG"])
 
-categories = YouTubeCategories(total_config["PATHS"]["ONLINE"]["CATEGORIES"], local = False)
+categories = YouTubeCategories(total_config["PATHS"]["CATEGORIES"], local = total_config["LOCAL"])
 
 app.layout = html.Div(children = [
     html.H1(children = "YouTube API Dashboard"),
-    html.Div(children = "A simple dashboard for ineracting with and exploring YouTube API data"),
+    html.Div(children = "A simple dashboard for interacting with and exploring YouTube API data"),
 
     # Dropdown to select video category
     dcc.Dropdown(
@@ -48,7 +48,7 @@ app.layout = html.Div(children = [
 ])
 
 # Get and memoize the dataframe
-@cache.memoize(timeout = 600)
+@cache.memoize(timeout = 3000)
 def get_dataframe(url):
     return pd.read_pickle(url)
 
@@ -62,7 +62,7 @@ def get_dataframe(url):
 def update_view_count_graph(view_slider, category_id):
     # Convert to int and the dataframe
     video_views = int(view_slider) * 1_000_000
-    df = get_dataframe(total_config["PATHS"]["ONLINE"]["DF"])
+    df = get_dataframe(total_config["PATHS"]["DF"])
 
     # Perform the query
     ids = df[df.yt["viewCount"] >= video_views]["id"].unique()
@@ -92,7 +92,7 @@ def update_view_count_graph(view_slider, category_id):
     [Input("category_id", "value")]
 )
 def update_bar_chart_categories(category_id):
-    df = get_dataframe(total_config["PATHS"]["ONLINE"]["DF"])
+    df = get_dataframe(total_config["PATHS"]["DF"])
     df = df.drop_duplicates(df.yt.get_alias("id"))
     grouped = df.groupby(df.yt.get_alias("categoryId")).size().reset_index()
     grouped.columns = [grouped.yt.get_alias("categoryId"), "count"]
