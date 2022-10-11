@@ -24,3 +24,6 @@ jobs:
     - name: copy ytdb
       shell: bash
       run: cp -a "./ytdb/." "./online/ytdb/"
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+          commit_message: Copy the files
