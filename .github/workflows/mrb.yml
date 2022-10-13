@@ -26,4 +26,4 @@ jobs:
       run: cp -a "./ytdb/." "./online/ytdb/"
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
-          commit_message: AUTOMADE: Copy files into online
+          commit_message: AUTOMATIC - Copy files into online
