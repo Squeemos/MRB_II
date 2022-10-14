@@ -11,8 +11,8 @@ import pandas as pd
 import yaml
 
 # Local imports
-from utils.yt_accessor import YouTubeAccessor
-from utils.categories import YouTubeCategories
+from utils import YouTubeAccessor
+from utils import YouTubeCategories
 
 with open("./config.yaml") as stream:
     total_config = yaml.safe_load(stream)
