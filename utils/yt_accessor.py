@@ -4,10 +4,14 @@ import pandas as pd
 class YouTubeAccessor(object):
 
     aliases = {
+        # Single strings to get
         "likeCount" : "statistics.likeCount",
         "viewCount" : "statistics.viewCount",
         "title" : "snippet.title",
-        "categoryId" : "snippet.categoryId"
+        "categoryId" : "snippet.categoryId",
+
+        # These must be used with df.yt[one, two, three, ...]
+        "thumbnails" : "snippet.thumbnails",
     }
 
     # df is the dataframe to access
@@ -18,7 +22,22 @@ class YouTubeAccessor(object):
         return self.__df[self.get_alias(item)]
 
     def __getitem__(self, item):
-        return self.get(item)
+        # Single string
+        if isinstance(item, str):
+            return self.get(item)
+
+        # Multiple indexing
+        elif isinstance(item, (list, tuple)):
+            first, *rest = item
+            # First item can be aliased
+            first = self.get_alias(first)
+            for item in rest:
+                first += "." + item
+
+            return self.__df[first]
+
+        else:
+            raise NotImplementedError(f"Indeixing with {type(item)} is not currently supported")
 
     def get_alias(self, item):
         return YouTubeAccessor.aliases.get(item, item)
