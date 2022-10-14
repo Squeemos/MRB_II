@@ -25,7 +25,7 @@ cache.init_app(app.server, config = total_config["CACHE_CONFIG"])
 categories = YouTubeCategories(total_config["PATHS"]["CATEGORY_IDS"], local = total_config["LOCAL"])
 
 app.layout = html.Div(children = [
-    html.H1(children = "YouTube API Dashboard"),
+    html.H1(children = "YouTube API Dashboard - In Progress"),
     html.Div(children = "A simple dashboard for interacting with and exploring YouTube API data"),
 
     # Dropdown to select video category
