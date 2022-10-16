@@ -18,15 +18,19 @@ jobs:
     - name: copy dashboard
       shell: bash
       run: cp "./dash_app.py" "./online/dash_app.py"
+
     - name: copy utils
       shell: bash
-      run: cp -a "./utils/." "./online/utils/"
+      run: cp -a "./yt_utils/." "./online/yt_utils/"
+
     - name: copy ytdb
       shell: bash
       run: cp -a "./ytdb/." "./online/ytdb/"
+
     - name: copy requirements.txt
       shell: bash
       run: cp "./requirements.txt" "./online/requirements.txt"
+
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
-          commit_message: AUTOMATIC - Copy files into online
+          commit_message: AUTOMATED - Copy files into online
