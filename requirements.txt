@@ -8,6 +8,11 @@ tinydb
 BetterJSONStorage
 blosc2
 orjson
+pyarrow
+
+# Image handling
+Pillow
+opencv-python
 
 # Apriori Models
 efficient-apriori
@@ -17,3 +22,4 @@ dash
 plotly
 pandas
 pyyaml
+flask_caching

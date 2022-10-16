@@ -24,6 +24,9 @@ jobs:
     - name: copy ytdb
       shell: bash
       run: cp -a "./ytdb/." "./online/ytdb/"
+    - name: copy requirements.txt
+      shell: bash
+      run: cp "./requirements.txt" "./online/requirements.txt"
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
           commit_message: AUTOMATIC - Copy files into online

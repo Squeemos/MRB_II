@@ -28,16 +28,25 @@ class YouTubeAccessor(object):
 
         # Multiple indexing
         elif isinstance(item, (list, tuple)):
-            first, *rest = item
-            # First item can be aliased
-            first = self.get_alias(first)
-            for item in rest:
-                first += "." + item
-
-            return self.__df[first]
+            return self.__df[self.__multiple_index_alias(item)]
 
         else:
             raise NotImplementedError(f"Indeixing with {type(item)} is not currently supported")
 
+    def __multiple_index_alias(self, item):
+        first, *rest = item
+        first = self.get_alias(first)
+        for val in rest:
+            first += "." + val
+
+        return first
+
     def get_alias(self, item):
-        return YouTubeAccessor.aliases.get(item, item)
+        if isinstance(item, str):
+            return YouTubeAccessor.aliases.get(item, item)
+
+        elif isinstance(item, (list, tuple)):
+            return self.__multiple_index_alias(item)
+
+        else:
+            raise NotImplementedError(f"Aliases with {type(item)} is not currently supported")
