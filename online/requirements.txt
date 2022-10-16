@@ -1,0 +1,25 @@
+# Google Interface
+google-api-python-client
+google-auth-oauthlib
+google-auth-httplib2
+
+# Database Interface
+tinydb
+BetterJSONStorage
+blosc2
+orjson
+pyarrow
+
+# Image handling
+Pillow
+opencv-python
+
+# Apriori Models
+efficient-apriori
+
+# Dashboarding
+dash
+plotly
+pandas
+pyyaml
+flask_caching
