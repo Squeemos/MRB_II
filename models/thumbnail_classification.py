@@ -7,27 +7,28 @@ from torch.utils.data import DataLoader, random_split
 
 import numpy as np
 from tqdm import tqdm
-import sys
+import sys, os
 
 class Classifier(nn.Module):
-    def __init__(self, device, *, image_size = None, n_classes = None, dataset = None):
+    def __init__(self, device, *, image_size = None, n_classes = None):
         super(Classifier, self).__init__()
 
+        # Device
         self.device = device
-        if image_size is not None and dataset is None:
-            img_size = image_size
-        elif image_size is None and dataset is not None:
-            img_size = dataset[0][0].shape
-        else:
-            raise Exception("Either image size or dataset needs to be passed in")
 
-        if n_classes is not None and dataset is None:
+        # Size of the image
+        if image_size is not None:
+            img_size = image_size
+        else:
+            raise Exception("Please supply image size")
+
+        # Number of classes
+        if n_classes is not None:
             num_classes = n_classes
-        elif n_classes is None and dataset is not None:
-            num_classes = len(dataset.classes)
         else:
             raise Exception("Either n_classes or dataset needs to be passed in")
 
+        # Nature cnn
         self.convs = nn.Sequential(
             nn.Conv2d(3, 32, kernel_size = 3, padding = 1),
             nn.ReLU(),
@@ -50,9 +51,11 @@ class Classifier(nn.Module):
             nn.Flatten(),
         ).to(device)
 
+        # Calculate the output size
         fcn_layer_input = torch.zeros(size = (1, *img_size), requires_grad = False).to(device)
         n, output_size = self.convs(fcn_layer_input).shape
 
+        # Fully connected classification
         self.mlp = nn.Sequential(
             nn.Linear(output_size, 1024),
             nn.ReLU(),
@@ -68,27 +71,34 @@ def main():
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
     # Hyper parameters
-    batch_size = 8
+    batch_size = 16
     num_workers = 1
-    pin_memory = False
-    lr = 1e-5
+    pin_memory = True
+    lr = 1e-3
     b1 = 0.5
     b2 = 0.99
-    iterations = 3
+    iterations = 10
     img_size = 128, 128
+    train_percentage = .8
 
+    # Transform the images on load (done lazily)
     transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize([0.5], [0.5]),
         transforms.Resize(img_size),
     ])
+
+    # Dataset is the folder of images
     dataset = datasets.ImageFolder("./imgs", transform = transform)
 
-    train_size = int(len(dataset) * .8)
+    # Split sizes
+    train_size = int(len(dataset) * train_percentage)
     test_size = len(dataset) - train_size
 
+    # Randomly split the train and test images
     train_imgs, test_imgs = random_split(dataset, [train_size, test_size])
 
+    # Train images
     train_data_loader = DataLoader(
         train_imgs,
         batch_size = batch_size,
@@ -96,6 +106,8 @@ def main():
         num_workers = num_workers,
         pin_memory = pin_memory,
     )
+
+    # Test images
     test_data_loader = DataLoader(
         test_imgs,
         batch_size = batch_size,
@@ -104,31 +116,62 @@ def main():
         pin_memory = pin_memory,
     )
 
+    # Classifier
     c = Classifier(
         device = device,
-        dataset = dataset,
+        # dataset = dataset,
+        image_size = (3, *img_size),
+        n_classes = len(dataset.classes),
     ).to(device)
 
+    # Setup loss function and optimizer
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(c.parameters(), lr = lr, betas = (b1, b2))
 
+    # Set the model for training
     c.train()
-    for epoch in tqdm(range(iterations), position = 0, desc = "Epoch", leave = True, dynamic_ncols=True):
-        batch_loss = 0
-        for imgs, labels in train_data_loader:
+
+    # Training
+    for epoch in tqdm(range(iterations), desc = "Epoch", position = 0, leave = False):
+        # Iterate over batches
+        for imgs, labels in tqdm(train_data_loader, desc = "Batch", position = 1, leave = False):
+            # Move everything to the device
             imgs, labels = imgs.to(device), labels.to(device)
 
+            # Zero gradients
             optimizer.zero_grad()
 
+            # Classify and compute loss
             outputs = c(imgs)
             loss = criterion(outputs, labels)
 
+            # Back propagate
             loss.backward()
             optimizer.step()
 
-            batch_loss += loss.item()
+    # Set the model for eval
+    c.eval()
 
-        tqdm.write(f"Iteration: {epoch + 1:4}\tLoss: {batch_loss / len(train_data_loader):.4}")
+    with torch.no_grad():
+        total = 0
+        n_correct = 0
+        # Iterate over testing date
+        for imgs, labels in test_data_loader:
+            # Move everything to the same device
+            imgs, labels = imgs.to(device), labels.to(device)
+
+            # Classify and compute from logits
+            preds = c(imgs)
+            preds = F.softmax(preds, dim = 1)
+            _, preds = torch.max(preds, dim = 1)
+
+            # Calculate totals
+            total += labels.shape[0]
+            n_correct += torch.sum(labels == preds).item()
+
+        # Ending accuracy
+        print(f"Testing Accuracy: {(n_correct / total) * 100:.2f}%")
+
 
 if __name__ == '__main__':
     main()
