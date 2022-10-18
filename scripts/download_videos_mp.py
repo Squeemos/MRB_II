@@ -77,7 +77,7 @@ def main():
         # Asynchronous processing
         p.starmap_async(download_video, arrs).get()
         print("Processes completed")
-    print(f"Took {time.perf_counter() - start_time:.2} seconds")
+    print(f"Took {time.perf_counter() - start_time:4.4f} seconds")
 
 if __name__ == "__main__":
     main()

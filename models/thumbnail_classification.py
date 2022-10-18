@@ -5,6 +5,8 @@ from torchvision.utils import save_image
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, random_split
 
+import saliency.core as saliency
+
 import numpy as np
 from tqdm import tqdm
 import sys, os
@@ -63,13 +65,24 @@ class Classifier(nn.Module):
             nn.ReLU(),
             nn.Linear(512, num_classes),
         )
+        self.grads = {}
+        # 12
+        self.convs[12].register_forward_hook(self.forward_hook)
+        self.convs[12].register_full_backward_hook(self.backward_hook)
 
     def forward(self, input):
-        return self.mlp(self.convs(input))
+        output = self.mlp(self.convs(input))
+        return output
+
+    #@staticmethod
+    def forward_hook(self, module, input, output):
+        self.grads[saliency.base.CONVOLUTION_LAYER_VALUES] = torch.movedim(output, 1, 3).detach().numpy()
+
+    def backward_hook(self, module, input, output):
+        self.grads[saliency.base.CONVOLUTION_OUTPUT_GRADIENTS] = torch.movedim(output[0], 1, 3).detach().numpy()
+
 
 def main():
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-
     # Hyper parameters
     batch_size = 16
     num_workers = 1
@@ -77,9 +90,10 @@ def main():
     lr = 1e-3
     b1 = 0.5
     b2 = 0.99
-    iterations = 10
-    img_size = 128, 128
+    iterations = 1
+    img_size = 32, 32
     train_percentage = .8
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
     # Transform the images on load (done lazily)
     transform = transforms.Compose([
@@ -147,6 +161,10 @@ def main():
 
             # Back propagate
             loss.backward()
+
+            #c.gradient_storage()
+
+            # Back propagate
             optimizer.step()
 
     # Set the model for eval
@@ -171,6 +189,11 @@ def main():
 
         # Ending accuracy
         print(f"Testing Accuracy: {(n_correct / total) * 100:.2f}%")
+
+    torch.save(c.state_dict(), "./model.pt")
+
+    class_dict = {c:idx for idx, c in enumerate(dataset.classes)}
+    print(class_dict)
 
 
 if __name__ == '__main__':
