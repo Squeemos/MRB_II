@@ -5,8 +5,6 @@ from torchvision.utils import save_image
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, random_split
 
-import saliency.core as saliency
-
 import numpy as np
 from tqdm import tqdm
 import sys, os
@@ -67,19 +65,19 @@ class Classifier(nn.Module):
         )
         self.grads = {}
         # 12
-        self.convs[12].register_forward_hook(self.forward_hook)
-        self.convs[12].register_full_backward_hook(self.backward_hook)
+        # self.convs[12].register_forward_hook(self.forward_hook)
+        # self.convs[12].register_full_backward_hook(self.backward_hook)
 
     def forward(self, input):
         output = self.mlp(self.convs(input))
         return output
 
-    #@staticmethod
-    def forward_hook(self, module, input, output):
-        self.grads[saliency.base.CONVOLUTION_LAYER_VALUES] = torch.movedim(output, 1, 3).detach().numpy()
-
-    def backward_hook(self, module, input, output):
-        self.grads[saliency.base.CONVOLUTION_OUTPUT_GRADIENTS] = torch.movedim(output[0], 1, 3).detach().numpy()
+    # #@staticmethod
+    # def forward_hook(self, module, input, output):
+    #     self.grads[saliency.base.CONVOLUTION_LAYER_VALUES] = torch.movedim(output, 1, 3).detach().cpu().numpy()
+    #
+    # def backward_hook(self, module, input, output):
+    #     self.grads[saliency.base.CONVOLUTION_OUTPUT_GRADIENTS] = torch.movedim(output[0], 1, 3).detach().cpu().numpy()
 
 
 def main():
@@ -90,8 +88,8 @@ def main():
     lr = 1e-3
     b1 = 0.5
     b2 = 0.99
-    iterations = 1
-    img_size = 32, 32
+    iterations = 20
+    img_size = 128, 128
     train_percentage = .8
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
@@ -191,9 +189,6 @@ def main():
         print(f"Testing Accuracy: {(n_correct / total) * 100:.2f}%")
 
     torch.save(c.state_dict(), "./model.pt")
-
-    class_dict = {c:idx for idx, c in enumerate(dataset.classes)}
-    print(class_dict)
 
 
 if __name__ == '__main__':
