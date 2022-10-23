@@ -4,11 +4,18 @@ import pandas as pd
 class YouTubeAccessor(object):
 
     aliases = {
-        # Single strings to get
+        # Statistics
         "likeCount" : "statistics.likeCount",
         "viewCount" : "statistics.viewCount",
+
+        # Snippet
+        "publishedAt": "snippet.publishedAt",
+        "channelId": "snippet.channelId",
         "title" : "snippet.title",
+        "description": "snippet.description",
+        "channelTitle": "snippet.channelTitle",
         "categoryId" : "snippet.categoryId",
+        "tags" : "snippet.tags",
 
         # These must be used with df.yt[one, two, three, ...]
         "thumbnails" : "snippet.thumbnails",
