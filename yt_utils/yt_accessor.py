@@ -7,6 +7,8 @@ class YouTubeAccessor(object):
         # Statistics
         "likeCount" : "statistics.likeCount",
         "viewCount" : "statistics.viewCount",
+        "favoriteCount" : "statistics.favoriteCount",
+        "commentCount" : "statistics.commentCount",
 
         # Snippet
         "publishedAt": "snippet.publishedAt",
@@ -16,6 +18,9 @@ class YouTubeAccessor(object):
         "channelTitle": "snippet.channelTitle",
         "categoryId" : "snippet.categoryId",
         "tags" : "snippet.tags",
+
+        # Content Details
+        "duration" : "contentDetails.duration",
 
         # These must be used with df.yt[one, two, three, ...]
         "thumbnails" : "snippet.thumbnails",
