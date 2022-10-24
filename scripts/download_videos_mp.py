@@ -32,6 +32,8 @@ def download_video(url, what, local_path, key, counter):
 def main():
     parser = argparse.ArgumentParser(description = "Download videos using multiprocessing")
     parser.add_argument("--url", "-u", type = str)
+    parser.add_argument("--config", "-c", type = str, default = "../config.yaml")
+    parser.add_argument("--table", "-t", default = "TRENDING")
     parser.add_argument("--local-path", "-lp", type = str, default = "./imgs/")
     parser.add_argument("--num-processes", "-np", type = int, default = 1)
     parser.add_argument("--key", "-k", type = list, default = ["thumbnails", "high", "url"])
@@ -42,12 +44,17 @@ def main():
     print("Downloading dataframe...")
     if args.url:
         df = pd.read_feather(args.url)
+    elif args.config:
+        with open(args.config) as stream:
+            config = yaml.safe_load(stream)
+        df = pd.read_feather(config["PATHS"][args.table])
     else:
-        raise Exception("Must pass in url")
+        raise Exception("Must pass in url or config")
     print("Dataframe downloaded\nBeginning extraction...")
 
     # Process the data and set it up to become arguments for the function
     df = df.drop_duplicates(subset = df.yt.get_alias(args.key))
+    df = df.sort_values(by = df.yt.get_alias("queryTime"))
     df = df[df.yt[args.key] != None]
     df = df[[df.yt.get_alias(args.key), df.yt.get_alias(args.what)]]
     range_len = range(len(df))
