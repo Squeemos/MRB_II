@@ -1,3 +1,4 @@
+from typing import Union
 import json
 from urllib.request import urlopen
 
@@ -9,7 +10,7 @@ class YouTubeCategories(object):
         '''
             Categories object that's basically a key : value pair where the value is a list
         '''
-        def __init__(self, key, value):
+        def __init__(self, key : int, value : str):
             self.__key = key
             self.__value = value
 
@@ -49,7 +50,7 @@ class YouTubeCategories(object):
             else:
                 self.__title_to_id[value] = [key]
 
-    def __getitem__(self, item):
+    def __getitem__(self, item) -> Union[YouTubeCategory, list[int]]:
         '''
             Overload of operator[]
 
@@ -65,15 +66,17 @@ class YouTubeCategories(object):
             for val in item:
                 cats.extend(self.__title_to_id[val])
             return cats
+        else:
+            raise NotImplementedError(f"Categories does not support accessing with type {type(item)}")
 
     @property
-    def titles(self) -> list:
+    def titles(self) -> list[str]:
         return list(self.__title_to_id.keys())
 
     @property
-    def title_to_id(self) -> dict:
+    def title_to_id(self) -> dict[str:str]:
         return self.__title_to_id
 
     @property
-    def id_to_title(self) -> dict:
+    def id_to_title(self) -> dict[str:str]:
         return self.__id_to_title
