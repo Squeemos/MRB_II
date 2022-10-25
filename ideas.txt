@@ -1,0 +1,3 @@
+# ideas
+
+- arima for views per category
