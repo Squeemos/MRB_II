@@ -1,3 +1,4 @@
+from typing import Union
 import pandas as pd
 import re
 
@@ -28,13 +29,13 @@ class YouTubeAccessor(object):
     }
 
     # df is the dataframe to access
-    def __init__(self, df):
+    def __init__(self, df : pd.DataFrame):
         self.__df = df
 
-    def get(self, item):
+    def get(self, item : str) -> Union[pd.DataFrame, pd.Series]:
         return self.__df[self.get_alias(item)]
 
-    def __getitem__(self, item):
+    def __getitem__(self, item : Union[str, tuple[str], list[Union[tuple[str], str]]]) -> Union[pd.DataFrame, pd.Series]:
         # Single string
         if isinstance(item, str):
             return self.get(item)
@@ -60,7 +61,7 @@ class YouTubeAccessor(object):
         else:
             raise NotImplementedError(f"Indexing with {type(item)} is not currently supported")
 
-    def __multiple_index_alias(self, item):
+    def __multiple_index_alias(self, item : tuple[str]) -> str:
         # Unpack because the first item is the harder thing to find
         first, *rest = item
         first = self.get_alias(first)
@@ -70,7 +71,7 @@ class YouTubeAccessor(object):
 
         return first
 
-    def get_alias(self, item):
+    def get_alias(self, item : Union[str, tuple[str]]) -> str:
         # If it's a string, just check the lookup
         if isinstance(item, str):
             return YouTubeAccessor.aliases.get(item, item)
@@ -83,7 +84,7 @@ class YouTubeAccessor(object):
             raise NotImplementedError(f"Aliases with {type(item)} is not currently supported")
 
     @staticmethod
-    def convert_pt_to_seconds(string):
+    def convert_pt_to_seconds(string : str) -> int:
         times = re.findall(r"\d+", string)
         match len(times):
             # Seconds
