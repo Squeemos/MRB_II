@@ -86,22 +86,22 @@ class YouTubeAccessor(object):
     @staticmethod
     def convert_pt_to_seconds(string : str) -> int:
         times = re.findall(r"\d+", string)
-        match len(times):
-            # Seconds
-            case 1:
-                return int(times[0])
-            # Minutes, seconds
-            case 2:
-                minutes, seconds = times
-                return int(minutes) * 60 + int(seconds)
-            # Hours, minutes, seconds
-            case 3:
-                hours, minutes, seconds = times
-                return int(hours) * 3600 + int(minutes) * 60 + int(seconds)
-            # Days, hours, minutes, seconds
-            case 4:
-                days, hours, minutes, seconds = times
-                return int(days) * 86400 + int(hours) * 3600 + int(minutes) * 60 + int(seconds)
-            # Something unexpected
-            case _:
-                raise Exception(f"More than 4 things parts to the time. {string} {times}")
+        length = len(times)
+        # Seconds
+        if length == 1:
+            return int(times[0])
+        # Minutes, seconds
+        elif length == 2:
+            minutes, seconds = times
+            return int(minutes) * 60 + int(seconds)
+        # Hours, minutes, seconds
+        elif length == 3:
+            hours, minutes, seconds = times
+            return int(hours) * 3600 + int(minutes) * 60 + int(seconds)
+        # Days, hours, minutes, seconds
+        elif length == 4:
+            days, hours, minutes, seconds = times
+            return int(days) * 86400 + int(hours) * 3600 + int(minutes) * 60 + int(seconds)
+        # Something unexpected
+        elif length == _:
+            raise Exception(f"More than 4 things parts to the time. {string} {times}")
