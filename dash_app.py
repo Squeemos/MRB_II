@@ -108,11 +108,14 @@ def categories_page():
     return html.Div([
         create_navbar(),
         html.H3("Page for interacting with the categories data"),
+        html.H4("WARNING: VERY SLOW"),
+        html.Div(id = "empty"),
         dcc.Dropdown(
             options = categories.titles,
             id = "trending_category_id",
         ),
         dcc.Graph(id = "category_trending"),
+        dcc.Graph(id = "category_taglen"),
     ])
 
 @app.callback(
@@ -248,6 +251,28 @@ def update_log_duration_hist(value):
         curve_type = "kde",
     )
 
+    return new_fig
+
+@app.callback(
+    Output("category_taglen", "figure"),
+    [Input("empty", "value")]
+)
+def update_category_taglen(value):
+    df = get_dataframe(total_config["PATHS"]["CATEGORIES"])
+    df = df.drop_duplicates(subset = df.yt.get_alias("id"), keep = "last", ignore_index = True).copy()
+    df["tagLen"] = df.yt["tags"].apply(lambda x: len(x) if x is not None else 0)
+
+    new_fig = px.scatter(
+        df,
+        x = df.yt.get_alias("tagLen"),
+        y = df.yt.get_alias("viewCount"),
+        color = df.yt.get_alias("title"),
+        labels = {
+            df.yt.get_alias("tagLen") : "Number of Tags",
+            df.yt.get_alias("viewCount") : "Number of Views",
+            df.yt.get_alias("title") : "Title",
+        },
+    )
     return new_fig
 
 
