@@ -23,6 +23,7 @@ plotly
 pandas
 pyyaml
 flask_caching
+dash_bootstrap_components
 
 # Misc
 tqdm
