@@ -5,10 +5,14 @@
 from dash import Dash, html, dcc, Input, Output, State, dash_table
 from flask_caching import Cache
 
-# Everything else
+# Plotly stuff
 import plotly.express as px
+import plotly.figure_factory as ff
+
+# Everything else
 import pandas as pd
 import yaml
+import numpy as np
 
 # Local imports
 from yt_utils import YouTubeAccessor
@@ -51,6 +55,8 @@ app.layout = html.Div(children = [
         id = "trending_category_id",
     ),
     dcc.Graph(id = "category_trending"),
+    dcc.Graph(id = "trending_box_chart"),
+    dcc.Graph(id = "log_duration_hist"),
 ])
 
 # Get and memoize the dataframe
@@ -150,6 +156,49 @@ def update_category_trending(category_trending):
         return {}
 
 
+@app.callback(
+    Output("trending_box_chart", "figure"),
+    [Input("trending_category_id", "value")]
+)
+def update_trending_box_chart(value):
+    df = get_dataframe(total_config["PATHS"]["TRENDING"])
+    df = df.drop_duplicates(subset = df.yt.get_alias("id"), keep = "last", ignore_index = True).copy()
+    df[df.yt.get_alias("duration")] = df.yt["duration"].apply(df.yt.convert_pt_to_seconds)
+    df["log_duration"] = df.yt["duration"].apply(np.log)
+    df["categoryName"] = df.yt["categoryId"].map(categories.id_to_title)
+    new_fig = px.box(
+        df,
+        x = df.yt.get_alias("categoryName"),
+        y = df.yt.get_alias("log_duration"),
+        labels = {
+            df.yt.get_alias("categoryName") : "Category",
+            df.yt.get_alias("log_duration") : "Duration (log scale)",
+        }
+    )
+
+    return new_fig
+
+@app.callback(
+    Output("log_duration_hist", "figure"),
+    [Input("trending_category_id", "value")]
+)
+def update_log_duration_hist(value):
+    df = get_dataframe(total_config["PATHS"]["TRENDING"])
+    df = df.drop_duplicates(subset = df.yt.get_alias("id"), keep = "last", ignore_index = True).copy()
+    df[df.yt.get_alias("duration")] = df.yt["duration"].apply(df.yt.convert_pt_to_seconds)
+    df["log_duration"] = df.yt["duration"].apply(np.log)
+    df["categoryName"] = df.yt["categoryId"].map(categories.id_to_title)
+
+    unique_cats = df.yt["categoryName"].unique()
+    all_values = [df[df.yt["categoryName"] == cat]["log_duration"] for cat in unique_cats]
+
+    new_fig = ff.create_distplot(
+        all_values,
+        unique_cats,
+        curve_type = "kde",
+    )
+
+    return new_fig
 
 if __name__ == '__main__':
     app.run_server(debug=True)
