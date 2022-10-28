@@ -1,8 +1,9 @@
 APP_CONFIG:
   name : YouTube Api Dashboard
+  suppress_callback_exceptions : True
 
 CACHE_CONFIG:
-  DEBUG : TRUE
+  DEBUG : True
   CACHE_TYPE : SimpleCache
   CACHE_DEFAULT_TIMEOUT : 600
 
@@ -11,4 +12,4 @@ PATHS:
   CATEGORIES : https://squeemos.pythonanywhere.com/static/yt_categories.feather
   CATEGORY_IDS : https://squeemos.pythonanywhere.com/static/video_categories.json
 
-LOCAL : FALSE
+LOCAL : False
