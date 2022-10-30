@@ -51,6 +51,9 @@ def _tag_hist(tag_df, categories):
     cat_tags["tags"] = cat_tags["tags"].apply(Counter)
     cat_tags["tags"] = cat_tags["tags"].apply(lambda x: dict(x.most_common(10)))
 
+    cat_tags["counts"] = cat_tags["tags"].apply(lambda x: list(x.values()))
+    cat_tags["tags"] = cat_tags["tags"].apply(lambda x: list(x.keys()))
+
     # Save result
     misc.save_df(cat_tags, "cat_tags_hist")
 

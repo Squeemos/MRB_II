@@ -12,6 +12,8 @@ import misc
 # ETL function imports
 from _cat.tags import cat_tags
 
+from _trend.views import trend_views
+
 
 # Load config with data paths and indication if local or online
 with open("../config.yaml") as stream:
@@ -41,7 +43,7 @@ def main():
 def call_trending_etl(df_trend, categories):
     # ADD/REMOVE TRENDING ETL FUNCTIONS
     trend_fns = [
-
+        trend_views
 
     ]
 
