@@ -14,7 +14,8 @@ pyarrow
 Pillow
 opencv-python
 
-# Apriori Models
+# NLP
+nltk
 efficient-apriori
 
 # Dashboarding
