@@ -28,8 +28,8 @@ jobs:
       run: cp -a "./ytdb/." "./online/ytdb/"
 
     - name: copy etl
-        shell: bash
-        run: cp -a "./etl/." "./online/etl/"
+      shell: bash
+      run: cp -a "./etl/." "./online/etl/"
 
     - name: copy requirements.txt
       shell: bash
