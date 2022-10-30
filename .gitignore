@@ -29,3 +29,6 @@ __pycache__/
 
 # Models
 *.pt
+
+# ETL data
+etl/data/*.feather

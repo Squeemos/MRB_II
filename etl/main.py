@@ -1,10 +1,13 @@
 """Entry point for backend data ETL."""
 
 import yaml
+import time
 
 import pandas as pd
 
 from yt_utils import YouTubeCategories
+
+import misc
 
 # ETL function imports
 from _cat.tags import cat_tags
@@ -16,6 +19,8 @@ with open("../config.yaml") as stream:
 
 
 def main():
+    ts = misc.start_timer("load")
+
     # Load trending data
     df_trend = pd.read_feather(total_config["PATHS"]["TRENDING"])
 
@@ -25,6 +30,8 @@ def main():
     # Load categories
     categories = YouTubeCategories(total_config["PATHS"]["CATEGORY_IDS"],
                                    local=total_config["LOCAL"])
+
+    misc.end_timer("load", ts)
 
     # Perform ETL and save output in data folder
     call_trending_etl(df_trend, categories)

@@ -1,3 +1,6 @@
+"""Misc. ETL utility fns."""
+
+import time
 import pandas as pd
 
 
@@ -22,3 +25,12 @@ def save_df(df: pd.DataFrame, name: str):
         save_df(df, 'tag_hist') --> etl/data/tag_hist.xz
     """
     df.to_feather(f"data/{name}.feather", compression="zstd")
+
+
+def start_timer(task_name: str):
+    print(f"Starting {task_name}...")
+    return time.perf_counter()
+
+
+def end_timer(task_name: str, ts: float):
+    print(f"Finished {task_name} in {time.perf_counter() - ts} sec.")
