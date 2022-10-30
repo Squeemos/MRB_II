@@ -9,7 +9,7 @@ import pandas as pd
 class YouTubeReader:
     """Reader for inserting YouTube Data API responses into Pandas DataFrames.
 
-    The DataFrames being created or updated must be pickled .xz files.
+    The DataFrames being created or updated must be feathered .feather files.
     """
 
     # Features to Encode -------------------------------------------------------
@@ -53,11 +53,11 @@ class YouTubeReader:
 
         Parameters:
             data: YT API response as a dictionary.
-            path: Path to either existing or new pickled dataframe file (.xz)
+            path: Path to either existing or new feathered dataframe file (.feather)
         """
         # Attempt to load dataframe from given path
         try:
-            df = pd.read_pickle(path)
+            df = pd.read_feather(path)
         except FileNotFoundError:
             df = pd.DataFrame()
 
@@ -86,9 +86,32 @@ class YouTubeReader:
             df[dt_feat] = pd.to_datetime(df[dt_feat], utc=True)
 
         # Pickle dict
-        pd.to_pickle(
-            df, path, compression={"method": "xz"}, protocol=-1
-        )
+        df.to_feather(path, compression = "zstd")
+
+    def insert_categories(self, data : dict, df : pd.DataFrame):
+        # Create individual entries
+        entries = []
+        for item in data["items"]:
+            item = self._flatten_dict(item)
+
+            # Add time data to video
+            entry = {"queryTime": self.time}
+            entry.update(item)
+
+            # Convert fields prior to insertion
+            self._encode_fields(entry)
+
+            entries.append(entry)
+
+        # Combine the data and the current dataframe
+        df = pd.concat([df, pd.DataFrame(entries)], ignore_index = True, sort = False)
+
+        # Convert datetimes
+        for dt_feat in YouTubeReader.dt_names:
+            df[dt_feat] = pd.to_datetime(df[dt_feat], utc=True)
+
+
+        return df
 
     @staticmethod
     def _encode_fields(entry: dict):
