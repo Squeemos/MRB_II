@@ -16,3 +16,8 @@ web:
 
 testing:
 	@echo "Testing"
+
+etl:
+    cd etl
+    python main.py
+    cd ..
