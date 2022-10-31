@@ -59,10 +59,10 @@ def create_navbar():
                 in_navbar=True,
                 label="Menu",
                 children=[
-                    dbc.DropdownMenuItem("Home", href='/'),
-                    dbc.DropdownMenuItem(divider=True),
+                    dbc.DropdownMenuItem("Home", href = '/'),
+                    dbc.DropdownMenuItem(divider = True),
                     dbc.DropdownMenuItem("Trending", href = "/trending"),
-                    dbc.DropdownMenuItem("Categories", href='/categories'),
+                    dbc.DropdownMenuItem("Categories", href = '/categories'),
                 ],
             ),
         ],
