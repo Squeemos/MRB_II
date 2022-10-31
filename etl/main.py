@@ -23,14 +23,16 @@ with open("../config.yaml") as stream:
 def main():
     ts = misc.start_timer("load")
 
+    paths = __get_paths()
+
     # Load trending data
-    df_trend = pd.read_feather(total_config["PATHS"]["TRENDING"])
+    df_trend = pd.read_feather(paths["TRENDING"])
 
     # Load categories data
-    df_cat = pd.read_feather(total_config["PATHS"]["CATEGORIES"])
+    df_cat = pd.read_feather(paths["CATEGORIES"])
 
     # Load categories
-    categories = YouTubeCategories(total_config["PATHS"]["CATEGORY_IDS"],
+    categories = YouTubeCategories(paths["CATEGORY_IDS"],
                                    local=total_config["LOCAL"])
 
     misc.end_timer("load", ts)
@@ -60,6 +62,20 @@ def call_category_etl(df_cat, categories):
 
     for fn in cat_fns:
         fn(df_cat, categories)
+
+
+def __get_paths():
+    paths = {
+        "TRENDING": total_config["PATHS"]["TRENDING"],
+        "CATEGORIES": total_config["PATHS"]["CATEGORIES"],
+        "CATEGORY_IDS": total_config["PATHS"]["CATEGORY_IDS"],
+    }
+
+    if total_config["LOCAL"]:
+        print(total_config["LOCAL"])
+        paths = {k: "." + path for k, path in paths.items()}
+
+    return paths
 
 
 if __name__ == "__main__":
