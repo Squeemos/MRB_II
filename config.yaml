@@ -4,8 +4,9 @@ APP_CONFIG:
 
 CACHE_CONFIG:
   DEBUG : True
-  CACHE_TYPE : SimpleCache
+  CACHE_TYPE : FileSystemCache
   CACHE_DEFAULT_TIMEOUT : 600
+  CACHE_DIR : dev/shm
 
 PATHS:
   TRENDING : https://squeemos.pythonanywhere.com/static/yt_trending.feather
