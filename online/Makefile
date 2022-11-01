@@ -10,7 +10,7 @@ pip:
 	pip install -e .
 	pip install -r requirements.txt
 
-web:
+web: clean
 	@echo "Reloading web app..."
 	touch ../../var/www/squeemos_pythonanywhere_com_wsgi.py
 
