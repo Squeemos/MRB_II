@@ -21,3 +21,6 @@ etl:
 	cd etl
 	python main.py
 	cd ..
+
+clean:
+	rm -rf dev
