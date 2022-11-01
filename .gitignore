@@ -10,7 +10,7 @@ virtual_environments/
 ytdb/download/api_key.txt
 
 ./config.yml
-./dev
+dev/
 
 .DS_Store
 

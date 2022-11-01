@@ -250,7 +250,6 @@ def update_log_duration_hist(value):
         unique_cats,
         curve_type = "kde",
     )
-
     return new_fig
 
 @app.callback(
