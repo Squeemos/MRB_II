@@ -1,3 +1,4 @@
 # ideas
 
 - arima for views per category
+- get a bunch of thumbnails and other images (ie wikipedia) in one place. Train a discriminator to guess if thumbnail or not with some certainty, then use it to determine whether non-images can more reasonably be included in a final image generation dataset
