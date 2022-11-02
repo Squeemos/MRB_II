@@ -24,7 +24,7 @@ cache.init_app(app.server, config = total_config["CACHE_CONFIG"])
 def get_dataframe(what):
     return pd.read_feather(total_config["PATHS"][what.upper()])
 
-@cache.memoize(timeout = 300)
+@cache.memoize(timeout = 3000)
 def get_dataframe_last(what):
     df = get_dataframe(what)
     return df.drop_duplicates(subset = df.yt.get_alias("id"), keep = "last", ignore_index = True).copy()
