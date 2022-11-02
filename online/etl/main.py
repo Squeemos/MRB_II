@@ -1,7 +1,7 @@
 """Entry point for backend data ETL."""
 
 import yaml
-import time
+import os
 
 import pandas as pd
 
@@ -36,6 +36,10 @@ def main():
                                    local=total_config["LOCAL"])
 
     misc.end_timer("load", ts)
+
+    # Create data directory if it does not exist
+    if not os.path.isdir("data"):
+        os.makedirs("data")
 
     # Perform ETL and save output in data folder
     call_trending_etl(df_trend, categories)
@@ -72,7 +76,6 @@ def __get_paths():
     }
 
     if total_config["LOCAL"]:
-        print(total_config["LOCAL"])
         paths = {k: "." + path for k, path in paths.items()}
 
     return paths
