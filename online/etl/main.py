@@ -75,8 +75,8 @@ def __get_paths():
         "CATEGORY_IDS": total_config["PATHS"]["CATEGORY_IDS"],
     }
 
-    # if total_config["LOCAL"]:
-    #    paths = {k: "." + path for k, path in paths.items()}
+    if total_config["LOCAL"]:
+        paths = {k: "." + path for k, path in paths.items()}
 
     return paths
 
