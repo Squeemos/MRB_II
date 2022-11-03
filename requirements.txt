@@ -26,5 +26,8 @@ pyyaml
 flask_caching
 dash_bootstrap_components
 
+# PyTorch addons
+captum
+
 # Misc
 tqdm

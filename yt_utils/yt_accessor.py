@@ -55,7 +55,7 @@ class YouTubeAccessor(object):
                 elif isinstance(val, str):
                     new_cols.append(self.get_alias(val))
                 else:
-                    raise NotImplementedError(f"Indexing with {type(val)} is not currentl supported")
+                    raise NotImplementedError(f"Indexing with {type(val)} is not currently supported")
             return self.__df[new_cols]
 
         else:

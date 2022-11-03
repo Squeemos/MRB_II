@@ -36,10 +36,12 @@ def main():
     parser.add_argument("--table", "-t", default = "TRENDING")
     parser.add_argument("--local-path", "-lp", type = str, default = "./imgs/")
     parser.add_argument("--num-processes", "-np", type = int, default = 1)
-    parser.add_argument("--key", "-k", type = list, default = ["thumbnails", "high", "url"])
+    parser.add_argument("--key", "-k", nargs = 3, default = ("thumbnails", "high", "url"))
     parser.add_argument("--what", "-w", type = str, default = "categoryId")
 
     args = parser.parse_args()
+    
+    keys = tuple(args.key)
 
     print("Downloading dataframe...")
     if args.url:
@@ -53,19 +55,19 @@ def main():
     print("Dataframe downloaded\nBeginning extraction...")
 
     # Process the data and set it up to become arguments for the function
-    df = df.drop_duplicates(subset = df.yt.get_alias(args.key))
+    df = df.drop_duplicates(subset = df.yt.get_alias(keys))
     df = df.sort_values(by = df.yt.get_alias("queryTime"))
-    df = df[df.yt[args.key] != None]
-    df = df[[df.yt.get_alias(args.key), df.yt.get_alias(args.what)]]
+    df = df[df.yt[keys] != None]
+    df = df[[df.yt.get_alias(keys), df.yt.get_alias(args.what)]]
     range_len = range(len(df))
 
     print("Extraction complete")
 
     # Create an iterable with all the function arguments
-    arrs = zip(df.yt[args.key].values,
+    arrs = zip(df.yt[keys].values,
                df.yt[args.what],
                repeat(args.local_path),
-               repeat(args.key),
+               repeat(keys),
                range(len(df))
            )
 
