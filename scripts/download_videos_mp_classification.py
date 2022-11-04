@@ -40,7 +40,7 @@ def main():
     parser.add_argument("--what", "-w", type = str, default = "categoryId")
 
     args = parser.parse_args()
-    
+
     keys = tuple(args.key)
 
     print("Downloading dataframe...")
