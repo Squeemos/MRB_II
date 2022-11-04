@@ -6,7 +6,7 @@ import plotly.express as px
 import plotly.figure_factory as ff
 
 from navbar import create_navbar
-from app import app, cats, get_dataframe_last, get_dataframe
+from app import app, cats, get_dataframe, get_last
 
 def categories_page():
     return html.Div([
@@ -55,7 +55,8 @@ def update_category_trending(category_trending):
     [Input("empty", "value")]
 )
 def update_category_taglen(value):
-    df = get_dataframe_last("categories")
+    df = get_dataframe("categories")
+    df = get_last(df)
     df["tagLen"] = df.yt["tags"].apply(lambda x: len(x) if x is not None else 0)
 
     new_fig = px.scatter(

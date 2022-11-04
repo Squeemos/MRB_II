@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 ### Import Dash Instance ###
 
 from navbar import create_navbar
-from app import app
+from app import app, get_dataframe
 
 def home_page():
     return html.Div([
@@ -31,4 +31,19 @@ def home_page():
                 - Modify or replace any aspect of the data returned to the API client via the YouTube API
             """
         ),
+        html.Button('Preload all Data', id = 'button', n_clicks = 0),
+        dcc.Loading(
+            id = "loading-input-1",
+            children = html.Div(id = "loading-output-1"),
+            type = "graph",
+        ),
     ])
+
+@app.callback(
+    Output("loading-output-1", "children"),
+    [Input("button", "n_clicks")],
+)
+def preload_all_data(value):
+    if value > 0:
+        get_dataframe("trending")
+        get_dataframe("categories")

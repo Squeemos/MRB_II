@@ -7,7 +7,7 @@ import plotly.figure_factory as ff
 import numpy as np
 
 from navbar import create_navbar
-from app import app, total_config, cats, get_dataframe, get_dataframe_last_log_duration_catname
+from app import app, total_config, cats, get_dataframe, process_duration_category
 
 def trending_page():
     return html.Div([
@@ -102,7 +102,8 @@ def update_bar_chart_categories(category_id):
     [Input("empty", "value")],
 )
 def update_trending_box_chart(value):
-    df = get_dataframe_last_log_duration_catname("trending")
+    df = get_dataframe("trending")
+    df = process_duration_category(df)
     new_fig = px.box(
         df,
         x = df.yt.get_alias("categoryName"),
@@ -120,7 +121,8 @@ def update_trending_box_chart(value):
     [Input("empty", "value")],
 )
 def update_log_duration_hist(value):
-    df = get_dataframe_last_log_duration_catname("trending")
+    df = get_dataframe("trending")
+    df = process_duration_category(df)
     unique_cats = df.yt["categoryName"].unique()
     all_values = [df[df.yt["categoryName"] == cat]["log_duration"] for cat in unique_cats]
 
