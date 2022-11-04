@@ -6,18 +6,21 @@ from PIL import Image
 from requests import get
 import time
 from itertools import repeat
+import json
 
 from multiprocessing import Pool
 import argparse
 
+import warnings
+
 from yt_utils import YouTubeAccessor
 
 # Download a video from a url
-def download_video(url, what, local_path, key, counter):
+def download_video(url, counter, local_path, key):
     '''
         Arguments:
             url: str url to the image
-            what: the thing this specific image belongs to (ex. category)
+            title: the title of the video
             local_path: the local path to save the image to (must exist)
             key: used to process the image a specific way
             counter: a counter for a unique number to name the file
@@ -27,17 +30,17 @@ def download_video(url, what, local_path, key, counter):
     if "high" in key:
         arr = arr[46:315, :, :]
     img = Image.fromarray(arr)
-    img.save(f"{local_path}/{what}/{counter}.png")
+    img.save(f"{local_path}/{counter}.png")
 
 def main() -> int:
     parser = argparse.ArgumentParser(description = "Download videos using multiprocessing")
     parser.add_argument("--url", "-u", type = str)
     parser.add_argument("--config", "-c", type = str, default = "../config.yaml")
     parser.add_argument("--table", "-t", default = "TRENDING")
-    parser.add_argument("--local-path", "-lp", type = str, default = "./imgs/")
+    parser.add_argument("--local-path", "-lp", type = str, default = "./dataset/")
     parser.add_argument("--num-processes", "-np", type = int, default = 1)
     parser.add_argument("--key", "-k", nargs = 3, default = ("thumbnails", "high", "url"))
-    parser.add_argument("--what", "-w", type = str, default = "categoryId")
+    parser.add_argument("--what", "-w", type = str, default = "title")
 
     args = parser.parse_args()
 
@@ -55,7 +58,7 @@ def main() -> int:
     print("Dataframe downloaded\nBeginning extraction...")
 
     # Process the data and set it up to become arguments for the function
-    df = df.drop_duplicates(subset = df.yt.get_alias(keys))
+    df = df.drop_duplicates(subset = df.yt.get_alias(args.what))
     df = df.sort_values(by = df.yt.get_alias("queryTime"))
     df = df[df.yt[keys] != None]
     df = df[[df.yt.get_alias(keys), df.yt.get_alias(args.what)]]
@@ -65,19 +68,26 @@ def main() -> int:
 
     # Create an iterable with all the function arguments
     arrs = zip(df.yt[keys].values,
-               df.yt[args.what].values,
-               repeat(args.local_path),
-               repeat(keys),
                range_len,
+               repeat(args.local_path + "/imgs"),
+               repeat(keys),
            )
+
+    if "high" not in keys:
+        warnings.warn("Image type other than high used, so black bars might be present")
 
     # Create the folders if they don't exist
     if not os.path.exists(args.local_path):
         os.mkdir(args.local_path)
 
-    for val in df.yt[args.what].unique():
-        if not os.path.exists(f"{args.local_path}/{val}"):
-            os.mkdir(f"{args.local_path}/{val}")
+    # Make a folder for the images
+    if not os.path.exists(args.local_path + "/imgs"):
+        os.mkdir(args.local_path + "/imgs")
+
+    # Make the mapping for the labels
+    save_dict = {k:v for k,v in zip(range_len, df.yt[args.what].values)}
+    with open(args.local_path + "labels.json", 'w') as f:
+        json.dump(save_dict, f)
 
     start_time = time.perf_counter()
     # Create pool

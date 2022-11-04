@@ -13,7 +13,7 @@ import sys, os
 
 from nature_classifier import Classifier
 
-def main():
+def main() -> int:
     # Hyper parameters
     batch_size = 32
     num_workers = 8
@@ -135,6 +135,8 @@ def main():
 
     torch.save(c.state_dict(), "./vgg19.pt")
 
+    return 0
+
 
 if __name__ == '__main__':
-    main()
+    SystemExit(main())

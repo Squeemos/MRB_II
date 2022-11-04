@@ -17,7 +17,7 @@ from thumbnail_classification import Classifier
 def normalize_array(data):
     return (data - np.min(data)) / (np.max(data) - np.min(data))
 
-def main():
+def main() -> int:
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     img_size = 128, 128
     transform = transforms.Compose([
@@ -51,5 +51,7 @@ def main():
     cpy = (normalize_array(cpy) * 255.0).astype(np.uint8)
     cv2.imwrite("./saliency.jpg", cpy)
 
+    return 0
+
 if __name__ == '__main__':
-    main()
+    SystemExit(main())
