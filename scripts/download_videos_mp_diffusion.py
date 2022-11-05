@@ -60,7 +60,7 @@ def main() -> int:
     # Process the data and set it up to become arguments for the function
     df = df.drop_duplicates(subset = df.yt.get_alias(args.what))
     df = df.sort_values(by = df.yt.get_alias("queryTime"))
-    df = df[df.yt[keys] != None]
+    df = df[~df.yt[keys].isin([None, "None"])]
     df = df[[df.yt.get_alias(keys), df.yt.get_alias(args.what)]]
     range_len = range(len(df))
 
