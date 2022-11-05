@@ -1,5 +1,4 @@
 APP_CONFIG:
-  name : YouTube Api Dashboard
   suppress_callback_exceptions : True
 
 CACHE_CONFIG:
