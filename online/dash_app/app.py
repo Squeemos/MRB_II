@@ -18,7 +18,7 @@ with open("../config.yaml") as stream:
 
 cats = YouTubeCategories(total_config["PATHS"]["CATEGORY_IDS"], local = total_config["LOCAL"])
 
-app = Dash(**total_config["APP_CONFIG"], external_stylesheets = [dbc.themes.MINTY])
+app = Dash(__name__, **total_config["APP_CONFIG"], external_stylesheets = [dbc.themes.MINTY])
 # Global cache?
 # cache = Cache()
 # cache.init_app(app.server, config = total_config["CACHE_CONFIG"])
