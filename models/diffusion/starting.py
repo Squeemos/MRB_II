@@ -23,7 +23,7 @@ def main() -> int:
     config = Config("./diffusion_config.yaml")
 
     log.info("Setting up config")
-    config.attention_resolutions = tuple([config.image_size // int(res) for res in config.attention_resolutions])
+    config.attention_resolutions = tuple([config.image_width // int(res) for res in config.attention_resolutions])
     config.channel_mult = tuple(config.channel_mult)
     config.model_channels = config.base_width
     config.lr = float(config.lr)
@@ -43,7 +43,7 @@ def main() -> int:
 
     log.info("Creating UNet")
     model = UNetModel(
-        config.image_size,
+        config.image_width,
         config.in_channels,
         config.model_channels,
         config.out_channels,

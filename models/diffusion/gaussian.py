@@ -109,7 +109,7 @@ class GaussianDiffusion(object):
         while num_samples < N:
             if xT is None:
                 xT = (
-                    torch.randn(config.batch_size, config.num_channels, config.image_size, config.image_size, dtype = torch.float32)
+                    torch.randn(config.batch_size, config.num_channels, config.image_height, config.image_width, dtype = torch.float32)
                     .to(config.device)
                 )
             if config.class_cond:

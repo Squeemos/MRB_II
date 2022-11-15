@@ -4,7 +4,8 @@ device : cuda
 
 img_path : ./imgs
 save_path : ./save
-image_size : 128
+image_width : 192
+image_height : 128
 batch_size : 32
 shuffle : True
 pin_memory : False

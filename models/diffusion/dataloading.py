@@ -9,7 +9,7 @@ import cv2
 
 def load_images(config):
     transform = transforms.Compose([
-        transforms.Resize((config.image_size, config.image_size)),
+        transforms.Resize((config.image_height, config.image_width)),
         # transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Lambda(lambda x : (2.0 * x) - 1.0),
