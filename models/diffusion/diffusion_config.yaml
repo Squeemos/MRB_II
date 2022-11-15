@@ -8,7 +8,8 @@ image_width : 192
 image_height : 128
 batch_size : 32
 shuffle : True
-pin_memory : False
+pin_memory : True
+num_workers : 1
 
 sampling_steps : 250
 ddim : True
@@ -20,9 +21,9 @@ in_channels : 3
 out_channels : 3
 num_channels : 3
 base_width : 32
-num_res_blocks : 4
+num_res_blocks : 2
 attention_resolutions : [32, 16, 8]
-channel_mult : [1, 2, 3, 4]
+channel_mult : [1, 1, 2, 3, 4, 8]
 conv_resample : True
 dims : 2
 num_heads_upsample : -1
@@ -42,4 +43,5 @@ ema_w : 0.9995
 
 img_every : 20
 save_every : 40
-use_trained : False
+use_trained : True
+saved_model_name : u_net

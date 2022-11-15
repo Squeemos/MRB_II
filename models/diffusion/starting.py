@@ -66,7 +66,10 @@ def main() -> int:
     ).to(config.device)
 
     if config.use_trained:
-        model.load_state_dict(torch.load("unet.pt"))
+        try:
+            model.load_state_dict(torch.load(f"{config.saved_model_name}.pt"))
+        except:
+            log.info("Saved model not found, initializing from scratch...")
 
     config.ema_dict = copy.deepcopy(model.state_dict())
 
@@ -80,11 +83,11 @@ def main() -> int:
         if epoch % config.img_every == 0:
             sampled_images, labels = diffusion.sample_N_images(1, model, config)
             cv2.imwrite(
-                f"{config.save_path}/{epoch:04}.png", np.concatenate(sampled_images, axis=1)[:, :, ::-1]
+                f"{config.save_path}/{epoch:04}_{labels[0]}.png", np.concatenate(sampled_images, axis=1)[:, :, ::-1]
             )
 
         if epoch % config.save_every:
-            torch.save(model.state_dict(), f"unet.pt")
+            torch.save(model.state_dict(), f"{config.saved_model_name}.pt")
 
 
     return 0
