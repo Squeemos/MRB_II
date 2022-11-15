@@ -86,7 +86,7 @@ def main() -> int:
                 f"{config.save_path}/{epoch:04}_{labels[0]}.png", np.concatenate(sampled_images, axis=1)[:, :, ::-1]
             )
 
-        if epoch % config.save_every:
+        if epoch % config.save_every == 0:
             torch.save(model.state_dict(), f"{config.saved_model_name}.pt")
 
 

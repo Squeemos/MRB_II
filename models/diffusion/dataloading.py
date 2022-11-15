@@ -15,8 +15,9 @@ def load_images(config):
         transforms.Resize((config.image_height, config.image_width)),
         # transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
-        transforms.Lambda(between_minusone_and_one),
-        #transforms.Normalize([config.T_MEAN, config.T_MEAN, config.T_MEAN], [config.T_STD, config.T_STD, config.T_STD])
+        transforms.Lambda(lambda x : (2.0 * x) - 1.0),
+        # transforms.Lambda(between_minusone_and_one),
+        # transforms.Normalize([config.T_MEAN, config.T_MEAN, config.T_MEAN], [config.T_STD, config.T_STD, config.T_STD])
     ])
 
     dataset = datasets.ImageFolder(config.img_path, transform = transform)
