@@ -26,7 +26,7 @@ def main():
     paths = __get_paths()
 
     # Load trending data
-    df_trend = pd.read_feather(paths["TRENDING"])
+    # df_trend = pd.read_feather(paths["TRENDING"])
 
     # Load categories data
     df_cat = pd.read_feather(paths["CATEGORIES"])
@@ -42,7 +42,7 @@ def main():
         os.makedirs("data")
 
     # Perform ETL and save output in data folder
-    call_trending_etl(df_trend, categories)
+    # call_trending_etl(df_trend, categories)
     call_category_etl(df_cat, categories)
 
 
@@ -75,8 +75,8 @@ def __get_paths():
         "CATEGORY_IDS": total_config["PATHS"]["CATEGORY_IDS"],
     }
 
-    if total_config["LOCAL"]:
-        paths = {k: "." + path for k, path in paths.items()}
+    # if total_config["LOCAL"]:
+    #     paths = {k: "." + path for k, path in paths.items()}
 
     return paths
 
