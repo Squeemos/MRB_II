@@ -30,6 +30,9 @@ categories_df = None
 last_load_trending = None
 last_load_categories = None
 
+cat_tags_hist_df = None
+cat_tags_hist_load = None
+
 def get_dataframe(what):
     global trending_df
     global categories_df
@@ -38,13 +41,13 @@ def get_dataframe(what):
 
     dataframe = None
     if what == "trending":
-        if trending_df is None or last_load_trending <= datetime.now() - timedelta(hours = 1):
+        if _should_reload(trending_df, last_load_trending):
             print("Loading trending...")
             trending_df = pd.read_feather(total_config["PATHS"]["TRENDING"])
             last_load_trending = datetime.now()
         dataframe = trending_df
     elif what == "categories":
-        if categories_df is None or last_load_categories <= datetime.now() - timedelta(hours = 1):
+        if _should_reload(categories_df, last_load_categories):
             print("Loading categories...")
             categories_df = pd.read_feather(total_config["PATHS"]["CATEGORIES"])
             last_load_categories = datetime.now()
@@ -53,6 +56,23 @@ def get_dataframe(what):
         warnings.warn("Requesting a dataframe that does not exist")
     return dataframe
 
+def get_etl(what):
+    global cat_tags_hist_df
+    global cat_tags_hist_load
+
+    dataframe = None
+    if what == "cat_tags_hist":
+        if _should_reload(cat_tags_hist_df, cat_tags_hist_load):
+            print("Loading category tags histogram...")
+            cat_tags_hist_df = pd.read_feather(total_config["PATHS"]["CAT_TAGS_HIST"])
+            cat_tags_hist_load = datetime.now()
+        dataframe = cat_tags_hist_df
+    else:
+        warnings.warn("Requesting a dataframe that does not exist")
+    return dataframe
+
+def _should_reload(df, load_time, hours=1):
+    return df is None or load_time <= datetime.now() - timedelta(hours=hours)
 
 def get_last(df):
     return df.drop_duplicates(subset = df.yt.get_alias("id"), keep = "last", ignore_index = True).copy()

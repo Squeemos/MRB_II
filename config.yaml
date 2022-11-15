@@ -11,5 +11,6 @@ PATHS:
   TRENDING : https://squeemos.pythonanywhere.com/static/yt_trending.feather
   CATEGORIES : https://squeemos.pythonanywhere.com/static/yt_categories.feather
   CATEGORY_IDS : https://squeemos.pythonanywhere.com/static/video_categories.json
+  CAT_TAGS_HIST : https://squeemos.pythonanywhere.com/static/cat_tags_hist.feather
 
 LOCAL : False

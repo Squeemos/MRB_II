@@ -14,6 +14,7 @@ def create_navbar():
                     dbc.DropdownMenuItem(divider = True),
                     dbc.DropdownMenuItem("Trending", href = "/trending"),
                     dbc.DropdownMenuItem("Categories", href = '/categories'),
+                    dbc.DropdownMenuItem("Tags", href = '/tags')
                 ],
             ),
         ],
