@@ -35,6 +35,10 @@ class YouTubeReader:
         "snippet.publishedAt",
     )
 
+    drop_substrings = (
+        "localization",
+    )
+
     # Constructor --------------------------------------------------------------
 
     def __init__(self, time: str = None):
@@ -45,15 +49,16 @@ class YouTubeReader:
 
     # Video Data ---------------------------------------------------------------
 
-    def insert_videos(self, data: dict, path: str):
-        """Inserts video data into the pickled df (.xz) at the given path.
+    def insert_videos(self, data: dict, path: str, last_month: bool = True):
+        """Inserts client response data as dict into dataframe at given path.
 
         Several fields are encoded according to their datatype (datetimes,
         integers, booleans, ...)
 
         Parameters:
-            data: YT API response as a dictionary.
-            path: Path to either existing or new feathered dataframe file (.feather)
+            data: YT API response as a dictionary
+            path: Path to either existing or new dataframe file
+            last_month: Whether to drop all data over a month
         """
         # Attempt to load dataframe from given path
         try:
@@ -61,22 +66,10 @@ class YouTubeReader:
         except FileNotFoundError:
             df = pd.DataFrame()
 
-        # Create individual entries
-        entries = []
-        for item in data["items"]:
-            item = self._flatten_dict(item)
-
-            # Add time data to video
-            entry = {"queryTime": self.time}
-            entry.update(item)
-
-            # Convert fields prior to insertion
-            self._encode_fields(entry)
-
-            entries.append(entry)
+        # Create data frame from individual entries
+        df_new = self.videos_to_df(data)
 
         # Insert new entries into the table
-        df_new = pd.DataFrame(entries)
         df = pd.concat(
             [df, df_new], ignore_index=True, sort=False
         )
@@ -85,10 +78,19 @@ class YouTubeReader:
         for dt_feat in YouTubeReader.dt_names:
             df[dt_feat] = pd.to_datetime(df[dt_feat], utc=True)
 
-        # Pickle dict
-        df.to_feather(path, compression = "zstd")
+        # Get only last month
+        if last_month:
+            df = self.last_month(df)
 
-    def insert_categories(self, data : dict, df : pd.DataFrame):
+        # Pickle dict
+        df.to_feather(path, compression="zstd")
+
+    def videos_to_df(self, data: dict):
+        """Takes a response for videos and returns a dataframe.
+
+        Parameters:
+            data: YT API response with category video data as a dictionary.
+        """
         # Create individual entries
         entries = []
         for item in data["items"]:
@@ -103,15 +105,22 @@ class YouTubeReader:
 
             entries.append(entry)
 
-        # Combine the data and the current dataframe
-        df = pd.concat([df, pd.DataFrame(entries)], ignore_index = True, sort = False)
+        df = pd.DataFrame(entries)
 
-        # Convert datetimes
-        for dt_feat in YouTubeReader.dt_names:
-            df[dt_feat] = pd.to_datetime(df[dt_feat], utc=True)
+        # Drop all features containing substrings
+        df = df.loc[:, [col for col in df.columns if not any(d in col for d in YouTubeReader.drop_substrings)]]
 
+        return pd.DataFrame(entries)
 
-        return df
+    @staticmethod
+    def last_month(df: pd.DataFrame, time_feature_name: str = "queryTime"):
+        """Returns only last month of given data based on the given feature.
+
+        Parameters
+            df: DataFrame to reduce to only last month's data
+            time_feature_name: Name of time feature to use to
+        """
+        return df.set_index(time_feature_name).last("30D").reset_index()
 
     @staticmethod
     def _encode_fields(entry: dict):

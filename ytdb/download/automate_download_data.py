@@ -1,6 +1,7 @@
 """Script for downloading data with the YouTube Data API client."""
 
 import json
+import pandas as pd
 
 from ytdb.reader.reader import YouTubeReader
 from datetime import datetime
@@ -79,7 +80,7 @@ def get_trending(youtube, youtube_reader, output_path: str, parts: str = None):
     print("got trending videos")
 
     # Insert the new videos into table
-    youtube_reader.insert_videos(response, output_path + "yt_trending.xz")
+    youtube_reader.insert_videos(response, output_path + "yt_trending.feather")
     print("trending videos inserted")
 
 
@@ -112,6 +113,12 @@ def get_categories(youtube, youtube_reader, output_path, category_ids,
     if parts is None:
         parts = _get_all_parts()
 
+    try:
+        df = pd.read_feather(output_path + "yt_categories.feather")
+    except FileNotFoundError:
+        df = pd.DataFrame()
+
+    cat_dfs = []
     for cat_id in category_ids:
         try:
             # Get data
@@ -126,10 +133,23 @@ def get_categories(youtube, youtube_reader, output_path, category_ids,
             print(f"got cat{cat_id} videos")
 
             # Insert the new videos into table
-            youtube_reader.insert_videos(response, output_path + "yt_categories.xz")
+            cat_dfs.append(youtube_reader.videos_to_df(response))
             print(f"cat{cat_id} videos inserted")
         except googleapiclient.errors.HttpError:
             print(f"cat{cat_id} chart not found or failed")
+
+    # Combine the data and the current dataframe
+    df = pd.concat([df] + cat_dfs, ignore_index=True, sort=False)
+
+    # Convert datetimes
+    for dt_feat in YouTubeReader.dt_names:
+        df[dt_feat] = pd.to_datetime(df[dt_feat], utc=True)
+
+    # Get only last month
+    df = youtube_reader.last_month(df)
+
+    df.to_feather(output_path + "yt_categories.feather", compression="zstd")
+    print("categories saved")
 
 
 def _get_all_parts():
