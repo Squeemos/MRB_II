@@ -14,13 +14,14 @@ import math
 def tags_page():
     return html.Div([
         create_navbar(),
-        html.H3("Explore tags"),
+        html.H3("Explore tags", className="header"),
         html.Div(id="empty"),
         dcc.Dropdown(
             options=cats.titles,
             id="cat_hist_data",
+            className="dropdown"
         ),
-        dcc.Graph(id="cat_tags_hist", className="center"),
+        dcc.Graph(id="cat_tags_hist", className="graph"),
     ])
 
 @app.callback(
