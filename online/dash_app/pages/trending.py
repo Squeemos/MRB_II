@@ -12,24 +12,30 @@ from app import app, total_config, cats, get_dataframe, process_duration_categor
 def trending_page():
     return html.Div([
         create_navbar(),
-        html.H3("Page for interacting with the trending tab"),
+        html.H3("Page for interacting with the trending tab", className="header"),
         html.Div(id = "empty"),
+
         # Dropdown to select video category
         dcc.Dropdown(
             options = cats.titles,
             multi = True,
             id = "category_id",
+            className="dropdown"
         ),
+        dcc.Graph(id="views_based_on_slider", className="graph"),
         # Simple slider to select values
         # To get the value from the slider, look at "id" and load "value"
         dcc.Slider(0, 20, 1,
                    value = 5,
                    id = "view_slider",
+                   className = "slider",
         ),
-        dcc.Graph(id = "views_based_on_slider"),
-        dcc.Graph(id = "bar_chart_categories"),
-        dcc.Graph(id = "trending_box_chart"),
-        dcc.Graph(id = "log_duration_hist"),
+
+        html.H3("Bar Chart Categories", className="header"),
+
+        dcc.Graph(id = "bar_chart_categories", className="graph"),
+        dcc.Graph(id = "trending_box_chart", className="graph"),
+        dcc.Graph(id = "log_duration_hist", className="graph"),
     ])
 
 @app.callback(
@@ -130,5 +136,8 @@ def update_log_duration_hist(value):
         all_values,
         unique_cats,
         curve_type = "kde",
+        show_hist = True,
+        show_curve = False,
+        show_rug = False,
     )
     return new_fig
