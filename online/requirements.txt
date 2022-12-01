@@ -22,12 +22,13 @@ efficient-apriori
 dash
 plotly
 pandas
-pyyaml
 flask_caching
 dash_bootstrap_components
+scipy
 
 # PyTorch addons
 captum
 
 # Misc
 tqdm
+pyyaml
