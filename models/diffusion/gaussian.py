@@ -68,16 +68,16 @@ class GaussianDiffusion(object):
             with torch.no_grad():
                 current_t = torch.tensor([t] * len(final), dtype = torch.long, device = final.device)
                 current_sub_t = torch.tensor([i] * len(final), dtype = torch.long, device = final.device)
-                pred_epsilon = model(final, current_t, **model_kwargs)
+                pred_epsilon = model(final, current_t, **model_kwargs) # et
                 pred_x0 = self.get_x0_from_xt_eps(final, pred_epsilon, current_sub_t, scalars)
                 pred_mean = self.get_pred_mean_from_x0_xt(final, pred_x0, current_sub_t, scalars)
                 if i == 0:
                     final = pred_mean
                 else:
                     if ddim:
-                        first = unsqueeze3(scalars.alpha_bar[current_sub_t - 1]).sqrt()
-                        second = (1 - unsqueeze3(scalars.alpha_bar[current_sub_t - 1])).sqrt()
-                        final = first * pred_x0 + second * pred_epsilon
+                        # Something here is wrong
+                        c2 = (1 - unsqueeze3(scalars.alpha_bar[current_sub_t - 1])).sqrt()
+                        final = unsqueeze3(scalars.alpha_bar[current_sub_t - 1]).sqrt() * pred_x0 + c2 * pred_epsilon
                     else:
                         final = pred_mean + unsqueeze3(scalars.beta_tilde[current_sub_t].sqrt()) * torch.randn_like(final)
                 final = final.detach()
@@ -133,3 +133,28 @@ class GaussianDiffusion(object):
         samples = np.concatenate(samples).transpose(0, 2, 3, 1)[:N]
         samples = (127.5 * (samples + 1)).astype(np.uint8)
         return samples, np.concatenate(labels)[:N] if config.class_cond else None
+
+    def sample_one_image_with_class(self, model, cls, config, xT = None):
+        if xT is None:
+            xT = (
+                torch.randn(1, config.num_channels, config.image_height, config.image_width, dtype = torch.float32)
+                .to(config.device)
+            )
+        if config.class_cond:
+            y = torch.full(size = (1,), fill_value = cls, dtype = torch.int64).to(
+                config.device
+            )
+        else:
+            y = None
+        gen_images = self.sample_from_reverse_process(
+            model, xT, config.sampling_steps, {"y": y}, config.ddim
+        )
+
+        gen_images = gen_images.detach().cpu().numpy().transpose(0, 2, 3, 1)
+        if True:
+            mi = gen_images.min()
+            ma = gen_images.max()
+            gen_images = (gen_images - mi) / (ma - mi)
+            gen_images = (255.0 * gen_images).astype(np.uint8)
+        # gen_images = (127.5 * (gen_images + 1)).astype(np.uint8)
+        return gen_images

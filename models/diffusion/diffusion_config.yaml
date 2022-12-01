@@ -11,7 +11,8 @@ shuffle : True
 pin_memory : False
 num_workers : 0
 
-sampling_steps : 250
+# For sampling the model
+sampling_steps : 500
 ddim : False
 
 epochs : 1000
@@ -43,5 +44,6 @@ ema_w : 0.9995
 
 img_every : 20
 save_every : 40
-use_trained : False
+use_trained : True
 saved_model_name : u_net
+# saved_model_name : u_net_2k

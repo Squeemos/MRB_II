@@ -68,6 +68,7 @@ def main() -> int:
     if config.use_trained:
         try:
             model.load_state_dict(torch.load(f"{config.saved_model_name}.pt"))
+            log.info(f"Saved model found, loading from {config.saved_model_name}.pt")
         except:
             log.info("Saved model not found, initializing from scratch...")
 
