@@ -65,7 +65,7 @@ def main() -> int:
         config.use_new_attention_order,
     ).to(config.device)
 
-    model.load_state_dict(torch.load(f"{config.saved_model_name}.pt"))
+    model.load_state_dict(torch.load(f"{config.saved_model_name}.pt", map_location = config.device))
 
     params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
