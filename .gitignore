@@ -9,6 +9,7 @@ secret_keys/*.key
 virtual_environments/
 ytdb/download/api_key.txt
 mysql/mysql_key.txt
+mysql/api_key.txt
 
 ./config.yml
 dev/
@@ -21,12 +22,15 @@ dev/
 # should NOT be excluded as they contain compiler settings and other important
 # information for Eclipse / Flash Builder.
 
-# 
+# IDE
 .ipynb_checkpoints/
 .idea/
+.vscode/
+
+# Cache
 __pycache__/
 
-#
+# Misc.
 /experiments/betterjson/output/
 
 # Models
@@ -34,3 +38,4 @@ __pycache__/
 
 # ETL data
 etl/data/*.feather
+
