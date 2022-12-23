@@ -49,7 +49,7 @@ class YoutubeDownloader:
         """Gets top trending videos in the US."""
         print("getting trending videos...")
 
-        youtube_reader = YouTubeReader(self.username, self.key, self.hostname, "trending")
+        youtube_reader = YouTubeReader(self.username, self.key, self.hostname, "trending", "videos")
 
         if parts is None:
             parts = self._get_all_parts()
@@ -92,7 +92,7 @@ class YoutubeDownloader:
         """Gets top videos for all categories in the US that support this."""
         print("getting category videos...")
 
-        youtube_reader = YouTubeReader(self.username, self.key, self.hostname, "categories")
+        youtube_reader = YouTubeReader(self.username, self.key, self.hostname, "categories", "videos")
 
         if parts is None:
             parts = self._get_all_parts()

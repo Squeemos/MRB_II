@@ -69,11 +69,20 @@ class YouTubeReader:
 
     # Constructor/Destructor----------------------------------------------------
 
-    def __init__(self, username: str, password: str, hostname: str, dbname: str,
-                 query_num_table_name: str = "videos"):
+    def __init__(self, username: str, key: str, hostname: str, dbname: str,
+                 query_num_table_name: str):
+        """Initializes the reader with a database engine and consistent query info.
+
+        Params:
+            username: Database user name
+            key: Database pwd associated w/ user
+            hostname: Database host name (ex. localhost)
+            dbname: Database name (ex. trending)
+            query_num_table_name: Name of table to check when determining query no.
+        """
         # Create engine
         #   engine = create_engine("mysql://user:pwd@host/db_name", echo=True)
-        connect_str = f"mysql://{username}:{password}@{hostname}/{dbname}"
+        connect_str = f"mysql://{username}:{key}@{hostname}/{dbname}"
         self.engine = sqa.create_engine(connect_str, echo=False)
 
         # Save query information
@@ -103,7 +112,9 @@ class YouTubeReader:
         df_vid = df.loc[:, list(self.video_schema.keys())]
 
         # Convert duration to raw seconds
-        df_vid["contentDetails.duration"] = pd.to_timedelta(df_vid["contentDetails.duration"].str.slice(start=2).str.replace("M", "m")).dt.seconds
+        df_vid["contentDetails.duration"] = pd.to_timedelta(
+            df_vid["contentDetails.duration"].str.slice(start=2).str.replace("M", "m")
+        ).dt.seconds
 
         # Convert columns to datetime
         dt_names = (
