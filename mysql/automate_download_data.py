@@ -11,7 +11,7 @@ import googleapiclient.errors
 
 def main():
     try:
-        downloader = YoutubeDownloader("eric", "localhost", "mysql_key.txt", "./data/")
+        downloader = YoutubeDownloader("eric", "localhost", "mysql_key.txt", "./database/")
 
         # Update category ids
         category_ids = downloader.get_category_ids()

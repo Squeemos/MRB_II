@@ -82,8 +82,9 @@ class YouTubeReader:
         """
         # Create engine
         #   engine = create_engine("mysql://user:pwd@host/db_name", echo=True)
-        connect_str = f"mysql://{username}:{key}@{hostname}/{dbname}"
-        self.engine = sqa.create_engine(connect_str, echo=False)
+        #connect_str = f"mysql+mysqlconnector://{username}:{key}@{hostname}/{dbname}"  # online
+        connect_str = f"mysql://{username}:{key}@{hostname}/{dbname}"                  # local
+        self.engine = sqa.create_engine(connect_str, pool_recycle=280, echo=False)
 
         # Save query information
         self.query_number = self._get_query_number(self.engine, query_num_table_name)

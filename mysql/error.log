@@ -1,0 +1,2 @@
+2022-12-30T23:29:36Z: <class 'sqlalchemy.exc.OperationalError'>: (MySQLdb.OperationalError) (2002, "Can't connect to server on 'localhost' (10061)")
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
